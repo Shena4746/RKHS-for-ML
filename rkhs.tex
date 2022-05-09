@@ -1,0 +1,149 @@
+\documentclass[a4paper,12pt]{article}
+% Math Packages
+\usepackage{amsmath,amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+% ---------- Environment
+\newtheorem{thm}{Theorem}[section]
+\newtheorem*{thm*}{Theorem}
+
+\newtheorem{prp}[thm]{Proposition}
+\newtheorem*{prp*}{Proposition}
+
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem*{cor*}{Corollary}
+
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem*{lem*}{Lemma}
+
+\newtheorem{dfn}[thm]{Definition}
+\newtheorem*{dfn*}{Definition}
+
+\theoremstyle{remark}
+\newtheorem*{prf}{Proof}
+
+\theoremstyle{definition}
+\newtheorem*{rem*}{Remark}
+\newtheorem{rem}[thm]{Remark}
+
+\theoremstyle{definition}
+\newtheorem{ex}[thm]{Example}
+\newtheorem*{ex*}{Example}
+
+\theoremstyle{definition}
+\newtheorem{exe}[thm]{Exercise}
+% --------- Environment
+
+% --------- macros
+\newcommand{\ip}[2]{\left<#1, #2 \right>}
+\newcommand{\abs}[1]{\left| #1 \right|}
+\newcommand{\norm}[1]{\left\| #1 \right\|}
+\newcommand{\ev}[1]{\mathrm{ev}_{#1}}
+
+
+\begin{document}
+\section{Reproducing Kernel Hilbert Space}
+\begin{dfn}[Reproducing Kernel]
+	Let \( E \) be a nonempty set. A function \( K \) defined by
+	\[
+		K:E \times E \ni (x,y) \mapsto K(x,y) \in \mathbb{F}
+	\]
+	is called a reproducing kernel of a Hilbert space \( H \) of functions on \( E \) if it satisfies the following conditions:
+	\begin{itemize}
+		\item[(a)] \( K(\cdot, x) \in H \) for every \( x \in E \)
+		\item[(b)]  \( \ip{f}{K(\cdot, x)}_H = f(x) \) for every \( x \in E \) and every \( f \in H \).
+	\end{itemize}
+	Such Hilbert space is called a reproducing kernel hilbert space (RKHS, for short), and is denoted by \( (H(E),K) \) or \( (H,K) \).
+\end{dfn}
+
+\begin{thm}
+	A Hilbert space \( H \) of functions on a nonempty set \( E \) admits a reproducing kernel \( K \) if and only if all evaluation functionals \( \{\ev{x} \} _{x \in E} \) are continuous on \( H \).
+\end{thm}
+\begin{prf}
+	Suppose \( (H,K) \) is a RKHS.
+	For \( x \in E \) and for \( f \in H \) we have
+	\[
+		\abs{\ev{x}(f)} = \abs{f(x)} = \abs{ \ip{f}{K(\cdot , x)}} \le \norm{f} \norm{K(\cdot,x )} \le \norm{f} K(x,x) ^{1/2} \to 0
+	\]
+	as \(  \norm{f}\to 0 \). Thus, \( \ev{x} \) is continuous linear functional (with norm \( K(x,x) ^{1/2} \)).
+
+	Conversely, if \( \ev{x}:H \ni f \mapsto f(x) \in \mathbb{F} \) is continuous, then, by Riesz's representation theorem, there exists \( r_x \in H\) such that
+	\begin{equation*}
+		\ip{f}{r_x} = f(x)
+	\end{equation*}
+	for every \( f \in H \). If this happens for every \( x \in E \), then \( K(x,y):=r_x(y) \) is a reproducing kernel of \( H \).
+	\qed\end{prf}
+
+\begin{cor}
+	Every convergent sequence in RKHS converges pointwise to the same limit.
+\end{cor}
+\begin{prf}
+	\( \abs{ f_n(x) - f(x)} = \abs{\ev{x}(f_n - f)} \to 0 \) when \( f_n \to f \) in norm by continuity of evaluation functional.
+	\qed\end{prf}
+\begin{dfn}(Positive definite function)
+	Let \( E \) be a nonempty set.
+	A function \( K: E \times E \to \mathbb{C} \) is called positive definite if for any \( n \in \mathbb{N} \) and for any \( a \in \mathbb{C}^n \) and \( x \in E^n \) there holds
+	\begin{equation*}
+		\sum_{i=1}^{n} \sum_{j=1}^{n} a_i \overline{a_j}K(x_i,x_j) \ge 0,
+	\end{equation*}
+	where \( \overline{c} \) is the complex conjugate of \( c \).
+\end{dfn}
+\begin{prp}
+	Suppose \( \varphi \) is a mapping of a set \( E \) into a Hilbert space \( H \). Then the mapping \( K: E \times E \ni (x,y) \mapsto \ip{\varphi(x)}{\varphi(y)} \in \mathbb{C} \) is positive definite.
+\end{prp}
+\begin{prf}
+	For \( a \) and \( x \) taken as in the definition, we have
+	\begin{equation*}
+		\sum_{i=1}^{n} \sum_{j=1}^{n} a_i \overline{a_j}K(x_i,x_j)
+		= \sum_{i=1}^{n} \sum_{j=1}^{n} a_i \overline{a_j} \ip{\varphi(x_i)}{\varphi(x_j)}
+		= \norm{\sum_{i=1}^{n} a_i \varphi(x_i) }^2 \ge 0.
+	\end{equation*}
+	\qed\end{prf}
+\begin{prp}
+	Every reproducing kernel is positive definite.
+\end{prp}
+\begin{prf}
+	\( \sum_{i=1}^{n} \sum_{j=1}^{n} a_i \overline{a_j}K(x_i,x_j) = \norm{\sum_{i=1}^{n} K(\cdot ,x_i)}^2 \).
+	\qed\end{prf}
+
+\begin{prp}
+	Every positive definite function \( K:E \times E \to \mathbb{C} \) satisfies
+	\begin{itemize}
+		\item[(a)] \( K(x,x) \ge 0 \) for every \( x \in E \)
+		\item[(b)] \( K(x,y)=\overline{K(y,x)} \) for every \( x,y \in E \)
+		\item[(c)] \( \overline{K} \) is also positive definite
+		\item[(d)] \( \abs{K(x,y)} \le K(x,x)K(y,y) \) for every \( x,y \in E \).
+	\end{itemize}
+\end{prp}
+\begin{prf}
+	(a) and (c) clearly hold. For \( \alpha, \beta \in \mathbb{C} \) and \( x,y \in E \), we have
+	\begin{equation*}
+		g(\alpha,\beta) := \abs{\alpha}^2 K(x,x) + \alpha \overline{\beta}K(x,y) + \overline{\alpha}\beta K(y,x) + \abs{\beta}^2 K(y,y) \ge 0.
+	\end{equation*}
+	Choose \( \alpha=\beta=1 \) and \( \alpha = i \), \( \beta=1 \) to get
+	\begin{equation*}
+		\begin{aligned}
+			K(x,y) + K(y,x) = g(1,1) - K(x,x) - K(y,y)     & =: A \in \mathbb{R}  \\
+			i K(x,y) - i K(y,x) = g(i,1) - K(x,x) - K(y,y) & =: B \in \mathbb{R}.
+		\end{aligned}
+	\end{equation*}
+	Therefore,
+	\begin{equation*}
+		\begin{aligned}
+			2 K(y,x) & = A + iB  \\
+			2 K(x,y) & = A - iB,
+		\end{aligned}
+	\end{equation*}
+	which proves (b). Finally, for \( x,y \in E \) with \( K(x,y) \neq 0 \) and for \( r \in \mathbb{R} \), (b) gives
+	\begin{equation*}
+		0 \ge g(r,K(x,y)) = r ^2 K(x,x) + 2r \abs{K(x,y)}^2 + \abs{K(x,y)}^2K(y,y).
+	\end{equation*}
+	As RHS is quadratic in \( r \), it has to satisfies
+	\begin{equation*}
+		\abs{K(x,x)}^4 - \abs{K(x,y)}^2K(x,x)K(y,y) \le 0,
+	\end{equation*}
+	from which (c) follows.
+	\qed\end{prf}
+\end{document}
