@@ -44,7 +44,13 @@
 
 
 \begin{document}
-\section{Reproducing Kernel Hilbert Space}
+\section*{What's this?}
+This document consists of a collection of basic results about Reproducing Kernel Hilbert Space useful in machine learning context. Nearly every statement and proof is borrowed mainly from \cite{Berlinet:RKHS} \cite{Christmann-Steinwart:SVM}.
+\cite{Cucker-Zhou:Learning-Theory}
+\cite{Paulsen-Raghupathi:Intro-RKHS}
+\cite{Schlkopf-Smola:Learning-with-kernels}
+\section*{Overview}
+\section{Basic Property of RKHS}
 \begin{dfn}[Reproducing Kernel]
 	Let \( E \) be a nonempty set. A function \( K \) defined by
 	\[
@@ -55,7 +61,7 @@
 		\item[(a)] \( K(\cdot, x) \in H \) for every \( x \in E \)
 		\item[(b)]  \( \ip{f}{K(\cdot, x)}_H = f(x) \) for every \( x \in E \) and every \( f \in H \).
 	\end{itemize}
-	Such Hilbert space is called a reproducing kernel hilbert space (RKHS, for short), and is denoted by \( (H(E),K) \) or \( (H,K) \).
+	Such a Hilbert space, associated with its reproducing kernel, is called a reproducing kernel hilbert space, and is denoted by \( (H,K) \).
 \end{dfn}
 
 \begin{thm}[Characterization of RKHS]\label{chara RKHS}
@@ -161,7 +167,7 @@
 \end{thm}
 \begin{prf}
 	Suppose such an extension \( H \) exists. \( H \) satisfies (b) by Theorem\ref{chara RKHS}.
-	Since \( H \) is complete, Cauchy sequence \( \{f_n\} \subset H_0\) tends to some \( f \), for which we have
+	Since \( H \) is complete, a Cauchy sequence \( \{f_n\} \subset H_0\) tends to some \( f \), for which we have
 	\begin{equation*}
 		f(x) = \ev{x}(f) = \lim_{n \to \infty} \ev{x}(f_n) = \lim_{n \to \infty} f_n(x) = 0
 	\end{equation*}
@@ -215,4 +221,46 @@
 	\end{equation*}
 	(B) is obvious from (A).
 	\qed\end{prf}
+
+\begin{lem}\label{continuity of evaluation}
+	Every evaluation functional \( \ev{x} \) is continuous on \( H \).
+\end{lem}
+\begin{prf}
+	Fix \( x \in E \). As a linear functional \( \ev{x} \) is assumed to be continuous on \( H_0 \), it admits unique continuous extension \( T_x \) onto the closure of \( H_0 \) in \( H \), that is, onto whole \( H \), where we use the assumption (a) and Lemma2(B). \( T_x \) is also the evaluation functional on \( H \). Indeed, for \( f \) and \( f_n \) as in Lemma\ref{density of H0 in H}, we have
+	\begin{equation*}
+		T_x(f) = \lim_{n \to \infty} \ev{x}(f_n) = \lim_{n \to \infty}f_n(x) = f(x).
+	\end{equation*}
+	\qed\end{prf}
+
+\begin{lem}
+	\( H \) is a RKHS.
+\end{lem}
+\begin{prf}
+	In light of Theorem\ref{chara RKHS} and Lemma\ref{continuity of evaluation}, it suffices to show that \( H \) is complete. Let \( \{f_n\} \) be a Cauchy sequence in \( H \). Let \( x \in E \). \( \{f_n(x)\} \) is also a Cauchy in \( \mathbb{F} \), and hence converges to some \( f(x) \). By Lemma\ref{density of H0 in H}, for every \( n \in \mathbb{N} \), there is \( g_n \in H_0 \) such that \( \norm{f_n-g_n}_H < n ^{-1}\). In view of the inequality
+	\begin{equation*}
+		\norm{f-f_n}_H \le \norm{f-g_n}_H + \norm{g_n- f_n}_H,
+	\end{equation*}
+	it suffices to prove that \( \norm{f-g_n}_H \to 0 \). To this end, we show that \( \{g_n\} \) is a Cauchy sequence converging pointwise to \( f \) (and then apply Lemma\ref{density of H0 in H}).
+
+	For fixed \( x \in E \), we have
+	\begin{equation*}
+		\begin{aligned}
+			\abs{g_n(x)-f(x)} & \le \abs{g_n(x)-f_n(x)} + \abs{f_n(x)-f(x)}       \\
+			                  & = \abs{\ev{x}(g_n-f_n)} + \abs{f_n(x)-f(x)} \to 0
+		\end{aligned}
+	\end{equation*}
+	as \( n \to \infty \), since \( \ev{x} \) is continuous and \( f_n(x)\to f(x) \) pointwise. Moreover,
+	\begin{equation*}
+		\begin{aligned}
+			\norm{g_n-g_m}_{H_0} & = \norm{g_n-g_m}_{H}                                 \\
+			                     & \le \norm{g_n-f_n} + \norm{f_n-f_m} + \norm{g_m-f_m} \\
+			                     & = n ^{-1} + \norm{f_n-f_m} + n ^{-1} \to 0
+		\end{aligned}
+	\end{equation*}
+	when \( n \to \infty \), as required.
+	\qed\end{prf}
+
+\section{Reconstruction of RKHS}
+\bibliographystyle{plain}
+\bibliography{ref}
 \end{document}
