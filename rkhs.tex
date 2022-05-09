@@ -58,7 +58,7 @@
 	Such Hilbert space is called a reproducing kernel hilbert space (RKHS, for short), and is denoted by \( (H(E),K) \) or \( (H,K) \).
 \end{dfn}
 
-\begin{thm}
+\begin{thm}[Characterization of RKHS]\label{chara RKHS}
 	A Hilbert space \( H \) of functions on a nonempty set \( E \) admits a reproducing kernel \( K \) if and only if all evaluation functionals \( \{\ev{x} \} _{x \in E} \) are continuous on \( H \).
 \end{thm}
 \begin{prf}
@@ -140,10 +140,79 @@
 	\begin{equation*}
 		0 \ge g(r,K(x,y)) = r ^2 K(x,x) + 2r \abs{K(x,y)}^2 + \abs{K(x,y)}^2K(y,y).
 	\end{equation*}
-	As RHS is quadratic in \( r \), it has to satisfies
+	As RHS is quadratic in \( r \), it must satisfy
 	\begin{equation*}
 		\abs{K(x,x)}^4 - \abs{K(x,y)}^2K(x,x)K(y,y) \le 0,
 	\end{equation*}
 	from which (c) follows.
+	\qed\end{prf}
+
+\begin{thm}
+	Let \( H_0 \) be the subspace of \( \mathbb{F}^E \), equipped with an inner product \( \ip{\cdot }{\cdot }_{H_0} \) with norm \( \norm{\cdot }_{H_0} \).
+	Then there exists unique RKHS \( (H,K) \) that extends \( H_0 \) in the sense that
+	\begin{itemize}
+		\item[(a)] \( H_0 \subset H \subset \mathbb{F}^E\) and the subspace topology of \( H_0 \) in \( H \) coincides with the topology of \( (H_0, \norm{\cdot }_{H_0}) \)
+	\end{itemize}
+	if and only if \( H_0 \) satisfies the following conditions:
+	\begin{itemize}
+		\item[(b)] every evaluation functional \( \ev{x} \) is continuous in \( (H_0, \norm{\cdot }_{H_0})\)
+		\item[(c)] any Cauchy sequence \( \{f_n\} \subset H_0 \) converging pointwise to 0 converges to 0 also in \( H_0 \)-norm.
+	\end{itemize}
+\end{thm}
+\begin{prf}
+	Suppose such extension \( H \) exists. \( H \) satisfies (b) by Theorem\ref{chara RKHS}.
+	Since \( H \) is complete, Cauchy sequence \( \{f_n\} \subset H_0\) tends to some \( f \), for which we have
+	\begin{equation*}
+		f(x) = \ev{x}(f) = \lim_{n \to \infty} \ev{x}(f_n) = \lim_{n \to \infty} f_n(x) = 0
+	\end{equation*}
+	for every \( x \in E \). Therefore, \( f \) is identically 0.
+
+	Conversely, suppose (b)(c) hold. Let \( H \) be the set of all functions \( f \in \mathbb{F}^E \) for which there exists a Cauchy sequence \( \{f_n\} \subset H_0 \) converging pointwise to \( f \). Clearly, \( H_0 \subset H \subset \mathbb{F}^E \). The rest of proof consists of the following Lemmas.
+	\qed\end{prf}
+
+\begin{lem}\label{construction of inner product}
+	Let \( f,g \in H \) and let \( \{f_n\} \) and \( \{g_n\} \) be two Cauchy sequences in \( H_0 \) that converge pointwise to \( f \) and \( g \) respectively.
+	\begin{itemize}
+		\item[(A)] The sequence \( \ip{f_n}{g_n}_{H_0} \) is convergent.
+		\item[(B)] The limit \( \lim_{n \to \infty} \ip{f_n}{g_n}_{H_0} \) depends solely on \( f \) and \( g \), independent of the choice of \( f_n \) and \( g_n \).
+		\item[(C)] \( \ip{f}{g}_H := \lim_{n \to \infty} \ip{f_n}{g_n}_{H_0} \) is an inner product on \( H \).
+	\end{itemize}
+\end{lem}
+\begin{prf}
+	It follows from the definition of \( f_n \) and \( g_n \) that
+	\begin{equation*}
+		\begin{aligned}
+			\abs{\ip{f_n}{g_n}_{H_0} - \ip{f_m}{g_m}_{H_0}}
+			 & = \abs{\ip{f_n - f_m}{g_n} - \ip{f_m}{g_n - g_m}}                    \\
+			 & \ge \norm{g_n} \norm{f_n - f_m} + \norm{f_m} \norm{g_n - g_m} \to 0,
+		\end{aligned}
+	\end{equation*}
+	which proves (A). In order to verify (B), suppose \( \{f_n'\} \) and \( \{g_n'\} \) are also such approximating sequences. We then similarly deduce that
+	\begin{equation*}
+		\abs{\ip{f_n}{g_n} - \ip{f_n'}{g_n'}} \le \norm{g_n}\norm{f_n- f_n'} + \norm{f_n'}\norm{g_n - g_n'}.
+	\end{equation*}
+	\( \{f_n- f_n'\} \) and \( \{g_n-g_n'\} \) are Cauchy sequences tending pointwise to 0. Thus, assumption (c) gives \( \norm{f_n-f_n'}\to 0 \) and \( \norm{g_n - g_n'}\to 0 \). So, (A) and (B) show that \( \ip{f}{g}_H \) is well-defined. Note that if \( \ip{f}{f}_H = 0\), then for every \( x \in E \)
+	\begin{equation*}
+		f(x) = \ev{x}(f) = \lim_{n \to \infty} \ev{x}(f_n) = \lim_{n \to \infty} f_n(x) = 0,
+	\end{equation*}
+	and hence \( f \equiv 0 \). As the symmetry, positivity, linearity are quite obvious, we conclude that (C) is true.
+	\qed\end{prf}
+
+\begin{lem}\label{density of H0 in H}
+	\begin{itemize}
+		\item[(A)] Let \( f \in H \) and let \( \{f_n\} \subset H_0 \) be a Cauchy sequence converging pointwise to \( f \). Then \( f_n \to f \) also in \( H \)-norm.
+		\item[(B)] \( H_0 \) is dense in \( H \).
+	\end{itemize}
+\end{lem}
+\begin{prf}
+	(A): Fix \( \epsilon>0 \). Choose \( N \in \mathbb{N}\) large enough so that
+	\begin{equation*}
+		\norm{f_n - f_m}_{H_0} < \epsilon
+	\end{equation*}
+	for all \( n,m >N \). For fixed \( n \), \( \{f_n-f_m\}_{m \in \mathbb{N}} \) is a Cauchy sequence converging pointwise to \( f_n-f \). Therefore, by definition of \( \ip{\cdot }{\cdot }_H \),
+	\begin{equation*}
+		\norm{f-f_n}_H = \lim_{n \to \infty}\norm{f_n - f_m}_{H_0} \le \epsilon.
+	\end{equation*}
+	(B) is obvious from (A).
 	\qed\end{prf}
 \end{document}
