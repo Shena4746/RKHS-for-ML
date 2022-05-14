@@ -4,6 +4,7 @@
 \usepackage{mathrsfs}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{url}
 
 % ---------- Environment
 \newtheorem{thm}{Theorem}[section]
@@ -34,6 +35,7 @@
 
 \theoremstyle{definition}
 \newtheorem{exe}[thm]{Exercise}
+
 % --------- Environment
 
 % --------- macros
@@ -44,15 +46,23 @@
 \newcommand{\adj}[1]{#1^{\star}}
 \newcommand{\fin}{\hfill \( \triangleleft \) }
 
+
+\title{A Theory on Reproducing Kernel Hilbert Space for Machine Learning} 
+\author{\url{https://github.com/Shena4746/RKHS-for-ML}}
+\date{2020/05/14}
+
 \begin{document}
+\maketitle
 \section*{What's this?}
 This document collects basic results on Reproducing Kernel Hilbert Space that are useful in the context of machine learning, aimed at readers with a basic knowledge of functional analysis. The content relies heavily on the existing literature listed in the bibliography, in particular \cite{Berlinet:RKHS} \cite{Christmann-Steinwart:SVM}.
 \cite{Cucker-Zhou:Learning-Theory}
 \cite{Paulsen-Raghupathi:Intro-RKHS}
 \cite{Schlkopf-Smola:Learning-with-kernels}
+
 \section*{Overview}
 
 \tableofcontents
+\clearpage
 \section{Basic Property of RKHS}
 \subsection{Properties of Reproducing Kernel}
 \begin{dfn}[Reproducing kernel]
@@ -67,6 +77,11 @@ This document collects basic results on Reproducing Kernel Hilbert Space that ar
 	\end{itemize}
 	Such a Hilbert space, associated with its reproducing kernel, is called a reproducing kernel hilbert space, and is denoted by \( (H,K) \).
 \end{dfn}
+
+\begin{rem}
+	(b) is called the textit{reproducing property}, and the identity is called the textit{reproducing identity}.
+	\fin\end{rem}
+
 
 \begin{thm}[Characterization of RKHS]\label{chara RKHS}
 	A Hilbert space \( H \) of functions on a nonempty set \( E \) admits a reproducing kernel \( K \) if and only if all evaluation functionals \( \{\ev{x} \} _{x \in E} \) are continuous on \( H \).
@@ -96,9 +111,9 @@ This document collects basic results on Reproducing Kernel Hilbert Space that ar
 \begin{prp}(Uniqueness of \( H \) and \( K \))\label{Density and Unique of RKHS}
 
 	\begin{itemize}
-		\item[(a)] The subspace \( H_0 \) spanned by \( \{K(\cdot ,x) \} _{x \in E} \) is dense in \( H \).
+		\item[(a)] Let \( (H,K) \) be a RKHS. The subspace \( H_0 \) spanned by \( \{K(\cdot ,x) \} _{x \in E} \) is dense in \( H \).
 		\item[(b)] A Hilbert space admits at most one reproducing kernel.
-		\item[(c)] A function \( K:E \times E \to \mathbb{F} \) is a reproducing kernel for at most one Hilbert space.
+		\item[(c)] A function \( K:E \times E \to \mathbb{F} \) is a reproducing kernel for at most one Hilbert space. In particular, there is at most one RKHS that has \( H_0 \) as a dense subspace.
 	\end{itemize}
 \end{prp}
 \begin{prf}
@@ -106,7 +121,9 @@ This document collects basic results on Reproducing Kernel Hilbert Space that ar
 	\begin{equation*}
 		\ip{f}{K(\cdot ,x)}_H = f(x)=0
 	\end{equation*}
-	for every \( x \in E \), which is the case precisely when \( f \equiv 0 \). To check (b), suppose \( K_1 \) and \( K_2 \) qualify as a reproducing kernel of \( H \). By definition,
+	for every \( x \in E \), which is the case precisely when \( f \equiv 0 \).
+	(b) is an immediate consequence of (a) and Corollary\ref{norm convergence implies pointwiese convergence}.
+	To check (b), suppose \( K_1 \) and \( K_2 \) qualify as a reproducing kernel of \( H \). By definition,
 	\begin{equation*}
 		f(x) = \ip{f}{K_1(\cdot ,x)}_H =\ip{f}{K_2(\cdot ,x)}_H
 	\end{equation*}
@@ -124,7 +141,7 @@ This document collects basic results on Reproducing Kernel Hilbert Space that ar
 		=\lim_{n \to \infty} \norm{f_n}_{H_2}
 		=\norm{f}_{H_2}.
 	\end{equation*}
-	Therefore, \( H_1 \) is isometrically included in \( H_2 \). Symmetry thus shows that both Hilbert spaces coincide.
+	Therefore, \( H_1 \) is isometrically included in \( H_2 \). Symmetry thus shows that both Hilbert spaces coincide. Exactly the same argument also works for the last claim.
 	\qed\end{prf}
 
 \begin{prp} (Representation of RK in terms of evaluation functional)\label{Representation of RK in terms of ev}
@@ -149,8 +166,6 @@ This document collects basic results on Reproducing Kernel Hilbert Space that ar
 	for all \( y \in E \). Thus, \( K \) is a reproducing kernel.
 	\qed\end{prf}
 
-\subsection{RKHS of a kernel}
-
 \begin{dfn} (Kernel, Feature Space, Feature Map)
 	A function \( K:E \times E \to \mathbb{F} \) is called a kernel if there is a \( \mathbb{F}\)-Hilbert space \( H \) and a mapping \( \varphi:E \to H \) such that
 	\begin{equation*}
@@ -168,6 +183,8 @@ This document collects basic results on Reproducing Kernel Hilbert Space that ar
 	This clearly shows that, given a kernel, neither feature space nor feature map are uniquely determined.
 	\fin\end{rem}
 
+\subsection{RKHS of a kernel}
+
 \begin{dfn} (Positive definite function)
 	Let \( E \) be a nonempty set.
 	A function \( K: E \times E \to \mathbb{C} \) is called positive definite if for any \( n \in \mathbb{N} \) and for any \( a \in \mathbb{C}^n \) and \( x \in E^n \) there holds
@@ -184,19 +201,6 @@ This document collects basic results on Reproducing Kernel Hilbert Space that ar
 		\item[(b)] The defining inequality (\ref{pd eq}) holds for any \( \alpha \in \mathbb{R}^n \) instead of \( \mathbb{C}^n \).
 	\end{itemize}
 \end{prp}
-
-\begin{cor} (Kernel is positive definite)\label{kernel is pd}
-	A kernel is positive definite.
-\end{cor}
-\begin{prf}
-	For the case \( \mathbb{F}=\mathbb{C} \), we have
-	\begin{equation*}
-		\sum_{i=1}^{n} \sum_{j=1}^{n} a_i \overline{a_j} \overline{K(x_i,x_j)}
-		= \sum_{i=1}^{n} \sum_{j=1}^{n} a_i \overline{a_j} \ip{\varphi(x_i)}{\varphi(x_j)}
-		= \norm{\sum_{i=1}^{n} a_i \varphi(x_i) }^2 \ge 0,
-	\end{equation*}
-	and hence \( \overline{K} \) as well as \( K \) are positive definite.
-	\qed\end{prf}
 
 \begin{prp}
 	Every positive definite function \( K:E \times E \to \mathbb{C} \) satisfies
@@ -237,6 +241,19 @@ This document collects basic results on Reproducing Kernel Hilbert Space that ar
 	from which (d) follows.
 	\qed\end{prf}
 
+\begin{cor} (Kernel is positive definite)\label{kernel is pd}
+	A kernel is positive definite.
+\end{cor}
+\begin{prf}
+	For the case \( \mathbb{F}=\mathbb{C} \), we have
+	\begin{equation*}
+		\sum_{i=1}^{n} \sum_{j=1}^{n} a_i \overline{a_j} \overline{K(x_i,x_j)}
+		= \sum_{i=1}^{n} \sum_{j=1}^{n} a_i \overline{a_j} \ip{\varphi(x_i)}{\varphi(x_j)}
+		= \norm{\sum_{i=1}^{n} a_i \varphi(x_i) }^2 \ge 0,
+	\end{equation*}
+	and hence \( \overline{K} \) as well as \( K \) are positive definite.
+	\qed\end{prf}
+
 \begin{thm} (RKHS generated by inner product space)\label{RKHS generated by ip sp}
 	Let \( H_0 \) be the subspace of \( \mathbb{F}^E \), equipped with an inner product \( \ip{\cdot }{\cdot }_{H_0} \) with norm \( \norm{\cdot }_{H_0} \).
 	Then there exists unique RKHS \( (H,K) \) that extends \( H_0 \) in the sense that
@@ -248,6 +265,7 @@ This document collects basic results on Reproducing Kernel Hilbert Space that ar
 		\item[(b)] every evaluation functional \( \ev{x} \) is continuous in \( (H_0, \norm{\cdot }_{H_0})\)
 		\item[(c)] any Cauchy sequence \( \{f_n\} \subset H_0 \) converging pointwise to 0 converges to 0 also in \( H_0 \)-norm.
 	\end{itemize}
+	Consequently, \( H \) is isomorphic to the completion of \( H_0 \).
 \end{thm}
 \begin{prf}
 	Suppose such an extension \( H \) exists. \( H \) satisfies (b) by Theorem\ref{chara RKHS}.
@@ -341,7 +359,7 @@ This document collects basic results on Reproducing Kernel Hilbert Space that ar
 			                     & = n ^{-1} + \norm{f_n-f_m} + n ^{-1} \to 0
 		\end{aligned}
 	\end{equation*}
-	when \( n,m \to \infty \), as required. \( H \) is isomorphic to the completion of \( H_0 \) since \( H_0 \) is dense in \( H \). Finally, suppose \( H' \) is also an qualifying RKHS. As \( H \) is isomorphic to \( H' \) there exists an isometric isomorphism between them. Furthermore, by Lemma\ref{Lemma density of H0 in H} and Lemma\ref{continuity of evaluation}, they share the same evaluation functionals \( \{\ev{x} \} _{x \in E} \) and hence the same reproducing kernel by Proposition\ref{Representation of RK in terms of ev}. Thus, they must coincide by Proposition\ref{Density and Unique of RKHS}.
+	when \( n,m \to \infty \), as required. \( H \) is isomorphic to the completion of \( H_0 \) since \( H_0 \) is dense in \( H \). Uniqueness of \( (H,K) \) comes from Proposition\ref{Density and Unique of RKHS}.
 	\qed\end{prf}
 
 \begin{thm} (Moore-Aronszajn)\label{Moore Theorem}
@@ -472,9 +490,9 @@ The next Theorem relates a feature map (therefore a kernel) and the RKHS the cor
 \section{Inheritance from Kernel to RKHS}
 \subsection{Measurability of RKHS}
 \subsection{Separability of RKHS}
+\subsection{Continuity of RKHS}
 
 \section{Mercer Representation}
-\section*{Further Readings}
 \bibliographystyle{plain}
 \bibliography{ref}
 \end{document}
