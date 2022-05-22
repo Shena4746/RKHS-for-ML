@@ -127,7 +127,6 @@ This document collects basic results on Reproducing Kernel Hilbert Space that ar
 		\ip{f}{K(\cdot ,x)}_H = f(x)=0
 	\end{equation*}
 	for every \( x \in E \), which is the case precisely when \( f \equiv 0 \).
-	(b) is an immediate consequence of (a) and Corollary\ref{norm convergence implies pointwiese convergence}.
 	To check (b), suppose \( K_1 \) and \( K_2 \) qualify as a reproducing kernel of \( H \). By definition,
 	\begin{equation*}
 		f(x) = \ip{f}{K_1(\cdot ,x)}_H =\ip{f}{K_2(\cdot ,x)}_H
@@ -146,7 +145,7 @@ This document collects basic results on Reproducing Kernel Hilbert Space that ar
 		=\lim_{n \to \infty} \norm{f_n}_{H_2}
 		=\norm{f}_{H_2}.
 	\end{equation*}
-	Therefore, \( H_1 \) is isometrically included in \( H_2 \). Symmetry thus shows that both Hilbert spaces coincide. Exactly the same argument also works for the last claim.
+	Therefore, \( H_1 \) is isometrically included in \( H_2 \). Symmetry thus shows that both Hilbert spaces coincide.
 	\qed\end{prf}
 
 \begin{prp} (Representation of RK in terms of evaluation functional)\label{Representation of RK in terms of ev}
@@ -270,7 +269,7 @@ This document collects basic results on Reproducing Kernel Hilbert Space that ar
 		\item[(b)] every evaluation functional \( \ev{x} \) is continuous in \( (H_0, \norm{\cdot }_{H_0})\)
 		\item[(c)] any Cauchy sequence \( \{f_n\} \subset H_0 \) converging pointwise to 0 converges to 0 also in \( H_0 \)-norm.
 	\end{itemize}
-	Consequently, \( H \) is isomorphic to the completion of \( H_0 \).
+	Consequently, \( H \) is isomorphic to the completion of \( H_0 \), and it consists of pointwise limit of Cauchy sequence in \( H_0 \).
 \end{thm}
 \begin{prf}
 	Suppose such an extension \( H \) exists. \( H \) satisfies (b) by Theorem\ref{chara RKHS}.
@@ -280,92 +279,120 @@ This document collects basic results on Reproducing Kernel Hilbert Space that ar
 	\end{equation*}
 	for every \( x \in E \). Therefore, \( f \) is identically 0.
 
-	Conversely, suppose (b)(c) hold. Let \( H \) be the set of all functions \( f \in \mathbb{F}^E \) for which there exists a Cauchy sequence \( \{f_n\} \subset H_0 \) converging pointwise to \( f \). Clearly, \( H_0 \subset H \subset \mathbb{F}^E \). The rest of proof consists of the following Lemmas.
-	\qed\end{prf}
-
-\begin{lem}\label{construction of inner product}
-	Let \( f,g \in H \) and let \( \{f_n\} \) and \( \{g_n\} \) be two Cauchy sequences in \( H_0 \) that converge pointwise to \( f \) and \( g \) respectively.
-	\begin{itemize}
-		\item[(A)] The sequence \( \ip{f_n}{g_n}_{H_0} \) is convergent.
-		\item[(B)] The limit \( \lim_{n \to \infty} \ip{f_n}{g_n}_{H_0} \) depends solely on \( f \) and \( g \), independent of the choice of \( f_n \) and \( g_n \).
-		\item[(C)] \( \ip{f}{g}_H := \lim_{n \to \infty} \ip{f_n}{g_n}_{H_0} \) is an inner product on \( H \).
-	\end{itemize}
-\end{lem}
-\begin{prf}
-	It follows from the definition of \( f_n \) and \( g_n \) that
+	Conversely, suppose (b)(c) hold. As Proposition\ref{Density and Unique of RKHS} show the uniqueness of such \( H \), we only have to prove the existence.
+	Let \( X \) be the Hilbert space derived by the completion of \( H_0 \).
+	In general, \( X \) consists of equivalent classes of Cauchy sequence in \( H_0 \) equipped with the inner product
 	\begin{equation*}
-		\begin{aligned}
-			\abs{\ip{f_n}{g_n}_{H_0} - \ip{f_m}{g_m}_{H_0}}
-			 & = \abs{\ip{f_n - f_m}{g_n} - \ip{f_m}{g_n - g_m}}                    \\
-			 & \ge \norm{g_n} \norm{f_n - f_m} + \norm{f_m} \norm{g_n - g_m} \to 0,
-		\end{aligned}
+		\ip{\cdot }{\cdot }_X : X \times X \ni \left( [\{f_n\}], [\{g_n\}] \right) \mapsto \lim_{n \to \infty} \ip{f_n}{g_n}_{H_0} \in \mathbb{F}.
 	\end{equation*}
-	which proves (A). In order to verify (B), suppose \( \{f_n'\} \) and \( \{g_n'\} \) are also such approximating sequences. We then similarly deduce that
+	Let \( f = [\{f_n\}] \) be an element in \( X \) with a representative Cauchy sequence \( \{f_n\} \subset H_0 \). It follows from (a) that
 	\begin{equation*}
-		\abs{\ip{f_n}{g_n} - \ip{f_n'}{g_n'}} \le \norm{g_n}\norm{f_n- f_n'} + \norm{f_n'}\norm{g_n - g_n'}.
+		\abs{f_n(x)-f_m(x)} = \abs{\ev{x}(f_n-f_m)} \to 0,
 	\end{equation*}
-	\( \{f_n- f_n'\} \) and \( \{g_n-g_n'\} \) are Cauchy sequences tending pointwise to 0. Thus, assumption (c) gives \( \norm{f_n-f_n'}\to 0 \) and \( \norm{g_n - g_n'}\to 0 \). So, (A) and (B) show that \( \ip{f}{g}_H \) is well-defined. Note that if \( \ip{f}{f}_H = 0\), then for every \( x \in E \)
+	when \( n,m \to \infty \).
+	As this implies \( \{f_n(x)\} \) is a Cauchy sequence for every \( x \in E \), we can define a function \( f: E \to \mathbb{F} \) by setting
 	\begin{equation*}
-		f(x) = \ev{x}(f) = \lim_{n \to \infty} \ev{x}(f_n) = \lim_{n \to \infty} f_n(x) = 0,
+		f(x) := \lim_{n \to \infty} f_n(x).
 	\end{equation*}
-	and hence \( f \equiv 0 \). As the symmetry, positivity, linearity are quite obvious, we conclude that (C) is true.
-	\qed\end{prf}
-
-\begin{lem}\label{Lemma density of H0 in H}
-	\begin{itemize}
-		\item[(A)] Let \( f \in H \) and let \( \{f_n\} \subset H_0 \) be a Cauchy sequence converging pointwise to \( f \). Then \( f_n \to f \) also in \( H \)-norm.
-		\item[(B)] \( H_0 \) is dense in \( H \).
-	\end{itemize}
-\end{lem}
-\begin{prf}
-	(A): Fix \( \epsilon>0 \). Choose \( N \in \mathbb{N}\) large enough so that
+	It is easy to see that \( f \) is well-defined, independent of the choice of a representative \( \{f_n\} \). We then define a linear mapping
 	\begin{equation*}
-		\norm{f_n - f_m}_{H_0} < \epsilon
+		I:X \ni [\{f_n\}] \mapsto f \in \mathbb{F}^E.
 	\end{equation*}
-	for all \( n,m >N \). For fixed \( n \), \( \{f_n-f_m\}_{m \in \mathbb{N}} \) is a Cauchy sequence converging pointwise to \( f_n-f \). Therefore, by definition of \( \ip{\cdot }{\cdot }_H \),
-	\begin{equation*}
-		\norm{f-f_n}_H = \lim_{n \to \infty}\norm{f_n - f_m}_{H_0} \le \epsilon.
-	\end{equation*}
-	(B) is obvious from (A).
-	\qed\end{prf}
-
-\begin{lem}\label{continuity of evaluation}
-	Every evaluation functional \( \ev{x} \) is continuous on \( H \).
-\end{lem}
-\begin{prf}
-	Fix \( x \in E \). As a linear functional \( \ev{x} \) is assumed to be continuous on \( H_0 \), it admits unique continuous extension \( T_x \) onto the closure of \( H_0 \) in \( H \), that is, onto whole \( H \), where we use the assumption (a) and Lemma2(B). \( T_x \) is also the evaluation functional on \( H \). Indeed, for \( f \) and \( f_n \) as in Lemma\ref{Lemma density of H0 in H}, we have
+	Obviously, \( I([\{f\}]) = f \) for \( f \in  H_0 \). Moreover,
+	\( I \) is injective; indeed, if \( h = [\{f_n\}] \in X\) and \( \lim_{n \to \infty} f_n(x)=0 \) for every \( x \in E \), then (b) gives \( f_n \to 0 \) in \( H_0 \)-norm and therefore \( h \equiv 0 \) in \( X \), as required. The isomorphism \( I \) induces the Hilbert structure on \( H:= I(X)\), which makes \( I \) isometric on \( H \). Clearly, \( H_0 \) is dense in \( H \). Finally, we claim that every evaluation functional \( \ev{x} \) is continuous on \( H \). Fix \( x \in E \). As \( \ev{x} \) is assumed in (a) to be (uniformly) continuous on \( H_0 \), it admits unique continuous extension \( T_x \) onto the closure of \( H_0 \) in \( H \), that is, onto whole \( H \). For \( f \in H \) and for \( f_n \in H_0\) with \( f_n \to f \) pointwise, we have
 	\begin{equation*}
 		T_x(f) = \lim_{n \to \infty} \ev{x}(f_n) = \lim_{n \to \infty}f_n(x) = f(x).
 	\end{equation*}
+	It follows from Theorem\ref{chara RKHS} that \( H \) admits a reproducing kernel.
 	\qed\end{prf}
 
-\begin{lem}
-	\( H \) is a RKHS satisfying (a) in Theorem\ref{RKHS generated by ip sp}. Consequently, \( H \) is isomorphic to the completion of \( H_0 \) and thus unique RKHS that meets the requirement.
-\end{lem}
-\begin{prf}
-	We first prove that \( H \) is actually a RKHS. In light of Theorem\ref{chara RKHS} and Lemma\ref{continuity of evaluation}, it suffices to show that \( H \) is complete. Let \( \{f_n\} \) be a Cauchy sequence in \( H \). Let \( x \in E \). \( \{f_n(x)\} \) is also a Cauchy in \( \mathbb{F} \), and hence converges to some \( f(x) \). By Lemma\ref{Lemma density of H0 in H}, for every \( n \in \mathbb{N} \), there is \( g_n \in H_0 \) such that \( \norm{f_n-g_n}_H < n ^{-1}\). In view of the inequality
-	\begin{equation*}
-		\norm{f-f_n}_H \le \norm{f-g_n}_H + \norm{g_n- f_n}_H,
-	\end{equation*}
-	it suffices to prove that \( \norm{f-g_n}_H \to 0 \). To this end, we show that \( \{g_n\} \) is a Cauchy sequence converging pointwise to \( f \) (and then apply Lemma\ref{Lemma density of H0 in H}).
+% \begin{lem}\label{construction of inner product}
+% 	Let \( f,g \in H \) and let \( \{f_n\} \) and \( \{g_n\} \) be two Cauchy sequences in \( H_0 \) that converge pointwise to \( f \) and \( g \) respectively.
+% 	\begin{itemize}
+% 		\item[(A)] The sequence \( \ip{f_n}{g_n}_{H_0} \) is convergent.
+% 		\item[(B)] The limit \( \lim_{n \to \infty} \ip{f_n}{g_n}_{H_0} \) depends solely on \( f \) and \( g \), independent of the choice of \( f_n \) and \( g_n \).
+% 		\item[(C)] \( \ip{f}{g}_H := \lim_{n \to \infty} \ip{f_n}{g_n}_{H_0} \) is an inner product on \( H \).
+% 	\end{itemize}
+% \end{lem}
+% \begin{prf}
+% 	It follows from the definition of \( f_n \) and \( g_n \) that
+% 	\begin{equation*}
+% 		\begin{aligned}
+% 			\abs{\ip{f_n}{g_n}_{H_0} - \ip{f_m}{g_m}_{H_0}}
+% 			 & = \abs{\ip{f_n - f_m}{g_n} - \ip{f_m}{g_n - g_m}}                    \\
+% 			 & \ge \norm{g_n} \norm{f_n - f_m} + \norm{f_m} \norm{g_n - g_m} \to 0,
+% 		\end{aligned}
+% 	\end{equation*}
+% 	which proves (A). In order to verify (B), suppose \( \{f_n'\} \) and \( \{g_n'\} \) are also such approximating sequences. We then similarly deduce that
+% 	\begin{equation*}
+% 		\abs{\ip{f_n}{g_n} - \ip{f_n'}{g_n'}} \le \norm{g_n}\norm{f_n- f_n'} + \norm{f_n'}\norm{g_n - g_n'}.
+% 	\end{equation*}
+% 	\( \{f_n- f_n'\} \) and \( \{g_n-g_n'\} \) are Cauchy sequences tending pointwise to 0. Thus, assumption (c) gives \( \norm{f_n-f_n'}\to 0 \) and \( \norm{g_n - g_n'}\to 0 \). So, (A) and (B) show that \( \ip{f}{g}_H \) is well-defined. Note that if \( \ip{f}{f}_H = 0\), then for every \( x \in E \)
+% 	\begin{equation*}
+% 		f(x) = \ev{x}(f) = \lim_{n \to \infty} \ev{x}(f_n) = \lim_{n \to \infty} f_n(x) = 0,
+% 	\end{equation*}
+% 	and hence \( f \equiv 0 \). As the symmetry, positivity, linearity are quite obvious, we conclude that (C) is true.
+% 	\qed\end{prf}
 
-	For fixed \( x \in E \), we have
-	\begin{equation*}
-		\begin{aligned}
-			\abs{g_n(x)-f(x)} & \le \abs{g_n(x)-f_n(x)} + \abs{f_n(x)-f(x)}       \\
-			                  & = \abs{\ev{x}(g_n-f_n)} + \abs{f_n(x)-f(x)} \to 0
-		\end{aligned}
-	\end{equation*}
-	as \( n \to \infty \), since \( \ev{x} \) is continuous and \( f_n(x)\to f(x) \) pointwise. Moreover,
-	\begin{equation*}
-		\begin{aligned}
-			\norm{g_n-g_m}_{H_0} & = \norm{g_n-g_m}_{H}                                 \\
-			                     & \le \norm{g_n-f_n} + \norm{f_n-f_m} + \norm{g_m-f_m} \\
-			                     & = n ^{-1} + \norm{f_n-f_m} + n ^{-1} \to 0
-		\end{aligned}
-	\end{equation*}
-	when \( n,m \to \infty \), as required. \( H \) is isomorphic to the completion of \( H_0 \) since \( H_0 \) is dense in \( H \). Uniqueness of \( (H,K) \) comes from Proposition\ref{Density and Unique of RKHS}.
-	\qed\end{prf}
+% \begin{lem}\label{Lemma density of H0 in H}
+% 	\begin{itemize}
+% 		\item[(A)] Let \( f \in H \) and let \( \{f_n\} \subset H_0 \) be a Cauchy sequence converging pointwise to \( f \). Then \( f_n \to f \) also in \( H \)-norm.
+% 		\item[(B)] \( H_0 \) is dense in \( H \).
+% 	\end{itemize}
+% \end{lem}
+% \begin{prf}
+% 	(A): Fix \( \epsilon>0 \). Choose \( N \in \mathbb{N}\) large enough so that
+% 	\begin{equation*}
+% 		\norm{f_n - f_m}_{H_0} < \epsilon
+% 	\end{equation*}
+% 	for all \( n,m >N \). For fixed \( n \), \( \{f_n-f_m\}_{m \in \mathbb{N}} \) is a Cauchy sequence converging pointwise to \( f_n-f \). Therefore, by definition of \( \ip{\cdot }{\cdot }_H \),
+% 	\begin{equation*}
+% 		\norm{f-f_n}_H = \lim_{n \to \infty}\norm{f_n - f_m}_{H_0} \le \epsilon.
+% 	\end{equation*}
+% 	(B) is obvious from (A).
+% 	\qed\end{prf}
+
+% \begin{lem}\label{continuity of evaluation}
+% 	Every evaluation functional \( \ev{x} \) is continuous on \( H \).
+% \end{lem}
+% \begin{prf}
+% 	Fix \( x \in E \). As a linear functional \( \ev{x} \) is assumed to be continuous on \( H_0 \), it admits unique continuous extension \( T_x \) onto the closure of \( H_0 \) in \( H \), that is, onto whole \( H \), where we use the assumption (a) and Lemma2(B). \( T_x \) is also the evaluation functional on \( H \). Indeed, for \( f \) and \( f_n \) as in Lemma\ref{Lemma density of H0 in H}, we have
+% 	\begin{equation*}
+% 		T_x(f) = \lim_{n \to \infty} \ev{x}(f_n) = \lim_{n \to \infty}f_n(x) = f(x).
+% 	\end{equation*}
+% 	\qed\end{prf}
+
+% \begin{lem}
+% 	\( H \) is a RKHS satisfying (a) in Theorem\ref{RKHS generated by ip sp}. Consequently, \( H \) is isomorphic to the completion of \( H_0 \) and thus unique RKHS that meets the requirement.
+% \end{lem}
+% \begin{prf}
+% 	We first prove that \( H \) is actually a RKHS. In light of Theorem\ref{chara RKHS} and Lemma\ref{continuity of evaluation}, it suffices to show that \( H \) is complete. Let \( \{f_n\} \) be a Cauchy sequence in \( H \). Let \( x \in E \). \( \{f_n(x)\} \) is also a Cauchy in \( \mathbb{F} \), and hence converges to some \( f(x) \). By Lemma\ref{Lemma density of H0 in H}, for every \( n \in \mathbb{N} \), there is \( g_n \in H_0 \) such that \( \norm{f_n-g_n}_H < n ^{-1}\). In view of the inequality
+% 	\begin{equation*}
+% 		\norm{f-f_n}_H \le \norm{f-g_n}_H + \norm{g_n- f_n}_H,
+% 	\end{equation*}
+% 	it suffices to prove that \( \norm{f-g_n}_H \to 0 \). To this end, we show that \( \{g_n\} \) is a Cauchy sequence converging pointwise to \( f \) (and then apply Lemma\ref{Lemma density of H0 in H}).
+
+% 	For fixed \( x \in E \), we have
+% 	\begin{equation*}
+% 		\begin{aligned}
+% 			\abs{g_n(x)-f(x)} & \le \abs{g_n(x)-f_n(x)} + \abs{f_n(x)-f(x)}       \\
+% 			                  & = \abs{\ev{x}(g_n-f_n)} + \abs{f_n(x)-f(x)} \to 0
+% 		\end{aligned}
+% 	\end{equation*}
+% 	as \( n \to \infty \), since \( \ev{x} \) is continuous and \( f_n(x)\to f(x) \) pointwise. Moreover,
+% 	\begin{equation*}
+% 		\begin{aligned}
+% 			\norm{g_n-g_m}_{H_0} & = \norm{g_n-g_m}_{H}                                 \\
+% 			                     & \le \norm{g_n-f_n} + \norm{f_n-f_m} + \norm{g_m-f_m} \\
+% 			                     & = n ^{-1} + \norm{f_n-f_m} + n ^{-1} \to 0
+% 		\end{aligned}
+% 	\end{equation*}
+% 	when \( n,m \to \infty \), as required. \( H \) is isomorphic to the completion of \( H_0 \) since \( H_0 \) is dense in \( H \). Uniqueness of \( (H,K) \) comes from Proposition\ref{Density and Unique of RKHS}.
+% 	\qed\end{prf}
+
+\begin{rem}
+	Since \( H \) is derived as the completion of \( H_0 \), any Hilbert space that include \( H_0 \) and is isomorphic to \( H \) is identical to \( H \).
+	\fin\end{rem}
 
 \begin{thm} (Moore-Aronszajn)\label{Moore Theorem}
 	For arbitrary positive definite function \( K:E \times E \to \mathbb{F} \), there exists unique RKHS \( H \) that has \( K \) as its reproducing kernel. Moreover, the subspace \( H_0 \) spanned by \( \{K(\cdot ,x)\}_{x \in E} \) is dense in \( H \).
@@ -389,13 +416,13 @@ This document collects basic results on Reproducing Kernel Hilbert Space that ar
 	\begin{equation*}
 		\norm{K(\cdot ,z)}_{H_0} = \ip{K(\cdot ,x)}{K(\cdot ,x)}_{H_0} = K(x,x) \ge 0.
 	\end{equation*}
-	From this definiteness of \( \ip{\cdot }{\cdot }_{H_0} \) follows; indeed, if \( \ip{f}{f}_{H_0} = 0 \), then we have
+	This establishes the definiteness of \( \ip{\cdot }{\cdot }_{H_0} \); indeed, if \( \ip{f}{f}_{H_0} = 0 \), then we have
 	\begin{equation*}
 		\abs{f(x)} = \abs{\ip{f}{K(\cdot ,x)}} \le \ip{f}{f}^{1/2}K(x,x)^{1/2}=0,
 	\end{equation*}
 	for every \( x \in E \), implying \( f \equiv 0 \). We then conclude that \( \ip{\cdot }{\cdot }_{H_0} \) is in fact an inner product on \( H_0 \) as the other requirements are easy to check.
 
-	We now show that \( H_0 \) fulfills the conditions of Theorem\ref{RKHS generated by ip sp}. First, each \( \ev{x} \) is continuous on \( H_0 \); in fact, for \( f, g \in H_0 \),
+	We now show that \( H_0 \) fulfills the sufficient conditions of Theorem\ref{RKHS generated by ip sp}. First, each \( \ev{x} \) is continuous on \( H_0 \); in fact, for \( f, g \in H_0 \),
 	\begin{equation*}
 		\abs{\ev{x}(f)- \ev{x}(g)} = \abs{\ip{f-g}{K(\cdot ,x)}_{H_0}} \le \norm{f-g}_{H_0}K(x,x)^{1/2}
 	\end{equation*}
@@ -462,7 +489,7 @@ The next Theorem relates a feature map (therefore a kernel) and the RKHS the cor
 	is an isometric isomorphism on \( (\ker V)^{\perp} \).
 \end{thm}
 \begin{prf}
-	In light of Theorem\ref{Moore Theorem}, it suffices to prove that \( H \) is RKHS with reproducing kernel \( K \). The property of \( V \) are automatically obtained in the process. It is easy to verify that \( \norm{\cdot }_H \) is actually a norm on \( H \). As \( \ker V \) is closed subspace of \( H_0 \), we get the orthogonal decomposition \( H_0 = \ker V \oplus \left( \ker V \right)^{\perp} \). Let \( H_1 := \left( \ker V \right)^{\perp} \) and the restriction of \( V \) onto \( H_1 \) be denoted by \( V_1 \). Since every \( f \in H \) can be written as \( f = V(w_0+w_1) = V_1 w_1 \), with \( w_0 \in \ker V \), \( w_1 \in H_1 \),  we see that \( V_1 :H_1 \to H \) is an isomorphism. Similarly, we have
+	In light of Theorem\ref{Moore Theorem}, it suffices to prove that \( H \) is RKHS with reproducing kernel \( K \). The property of \( V \) are automatically obtained in the process. It is easy to verify that \( \norm{\cdot }_H \) is actually a norm on \( H \). As \( \ker V \) is closed subspace of \( H_0 \), we get the orthogonal decomposition \( H_0 = \ker V \oplus \left( \ker V \right)^{\perp} \). Let \( H_1 := \left( \ker V \right)^{\perp} \) and let the restriction of \( V \) onto \( H_1 \) be denoted by \( V_1 \). Since every \( f \in H \) can be written as \( f = V(w_0+w_1) = V_1 w_1 \), with \( w_0 \in \ker V \), \( w_1 \in H_1 \),  we see that \( V_1 :H_1 \to H \) is an isomorphism. Similarly, we have
 	\begin{equation*}
 		\begin{aligned}
 			\norm{f}_H
@@ -519,20 +546,16 @@ The next Theorem relates a feature map (therefore a kernel) and the RKHS the cor
 	\end{equation*}
 	equipped with the norm
 	\begin{equation*}
-		\norm{f_1}_{H_1} := \inf \{\norm{f}_{H} \,:\, f \in H ,\, f|_{E_1} = f_1\} = \norm{f 1_{E_1}}_H,
+		\norm{f_1}_{H_1} := \inf \{\norm{f}_{H} \,:\, f \in H ,\, f|_{E_1} = f_1\} = \norm{f_{1,0}}_H,
 	\end{equation*}
-	where \( f|_{A} \) stands for the restriction of \( f \) to the set \( A \), and \( 1_A \) is the indicator function of \( A \).
+	where \( f|_{A} \) stands for the restriction of \( f \) to the set \( A \), and \( f_{1,0} \) the extension of \( f_1 \) over \( H \) by zero.
 \end{cor}
 \begin{prf}
 	Define a feature map
 	\begin{equation*}
-		\varphi: E_1 \ni x \mapsto K(\cdot ,x)1_{E_1}(x) \in H,
+		\varphi: E_1 \ni x \mapsto K(\cdot ,x) \in H,
 	\end{equation*}
-	and apply Theorem\ref{rkhs generated by feature map} to see \( (H_1, K_1) \) is the RKHS generated by the feature map \( \varphi \). Moreover, Remark\ref{remark attainablity of norm induced by feature map} tells us that the infimum of \( \norm{f_1}_{H_1} \) is achievable at \( f \in H \) that should necessarily satisfy
-	\begin{equation*}
-		f_1 = \ip{f}{K(\cdot ,x)1_{E_1}(x)}_{H},
-	\end{equation*}
-	that is, at \( f = f_1 1{E_1}(x) \).
+	and apply Theorem\ref{rkhs generated by feature map} to see \( (H_1, K_1) \) is the RKHS generated by the feature map \( \varphi \). Moreover, Remark\ref{remark attainablity of norm induced by feature map} tells us that the infimum of \( \norm{f_1}_{H_1} \) is achievable at the orthogonal projection  of \( f \in H \) satisfying \( f|_{E_1} = f_1 \) onto \( \ker V ^{\perp } \), namely, at \( f 1_{E_1} \in H \).
 	\qed\end{prf}
 
 \begin{prp}
@@ -583,7 +606,7 @@ The next Theorem relates a feature map (therefore a kernel) and the RKHS the cor
 \subsection{Reconstruction via Sum and Product}
 
 \begin{thm} (Sum of RKHSs)
-	Let \( (H_1,K_1) \) and \( (H_2,K_2) \) be two \( \mathbb{F} \)-RKHSs.
+	Let \( (H_1,K_1) \) and \( (H_2,K_2) \) be two \( \mathbb{F} \)-RKHSs of functions on the common set \( E \).
 	Then \( K:= K_1 + K_2 \) is the RK of
 	\begin{equation*}
 		H:= H_1 \oplus H_2:= \{f_1 + f_2 \mid f_1 \in H_1, \, f_2 \in H_2\}
@@ -614,7 +637,7 @@ The next Theorem relates a feature map (therefore a kernel) and the RKHS the cor
 	Thus, \( (H,K) \) is a RKHS by Theorem\ref{rkhs generated by feature map}. For attainability of \( \norm{\cdot}_H \), see Remark\ref{remark attainablity of norm induced by feature map}.
 	\qed\end{prf}
 
-\begin{rem} (An review of tensor product of Hilbert space)
+\begin{rem} (An review of tensor product of Hilbert spaces)
 	Let \( H_1 \) and \( H_2 \) be two \( \mathbb{F} \)-Hilbert spaces of functions on \( E_1 \) and \( E_2 \), respectively. Consider the vector space \( H_1 \bullet H_2 \) spanned by the all functions of the form
 	\begin{equation*}
 		f_1 \otimes f_2: E_1 \times E_2 \ni (x_1,x_2) \mapsto f_1(x_1)f_2(x_2) \in \mathbb{F},
@@ -624,9 +647,27 @@ The next Theorem relates a feature map (therefore a kernel) and the RKHS the cor
 	\begin{equation*}
 		\ip{\cdot }{\cdot } : \left( H_1 \bullet H_2 \right) \times \left( H_1 \bullet H_2 \right) \ni (f_1 \otimes f_2, g_1 \otimes  g_2) \mapsto \ip{f_1}{g_1}_{H_1} \ip{f_2}{g_2}_{H_2}.
 	\end{equation*}
-	The completion of the inner product space \( H_1 \bullet H_2 \) is called the tensor product of \( H_1 \) and \( H_2 \), and is denoted by \( H_1 \otimes H_2 \).
+	The smallest complete Hilbert space containing the inner product space \( H_1 \bullet H_2 \) is called the tensor product of \( H_1 \) and \( H_2 \), and is denoted by \( H_1 \otimes H_2 \).
 	\fin\end{rem}
-
+\begin{thm} (Tensor product of RKHSs)
+	Let \( K_1 \) and \( K_2 \) be \( \mathbb{F} \)-kernels defined on \( E_1 \) and \( E_2 \), respectively, and let \( H_1 \) and \( H_2 \) be the corresponding \( \mathbb{F} \)-RKHSs. Set \( H:=H_1 \otimes H_2 \).
+	\begin{itemize}
+		\item[(a)] Define the product kernel \( K \) of \( K_1 \) and \( K_2 \) via
+		      \begin{equation*}
+			      K:(E_1 \times E_2) \times (E_1 \times E_2) \ni \left( (x_1, x_2), (y_1,y_2) \right) \mapsto K_1(x_1,y_1)K_2(x_2,y_2) \in \mathbb{F}.
+		      \end{equation*}
+		      Then \( (H,K) \) is a RKHS.
+		\item[(b)] Assume \( (E:=) E_1 = E_2 \). The RKHS the kernel \( K_E(x,y) :=K_1(x,y)K_2(x,y) \) coincides with \( H_E:=\{f|_{E \times E} \mid f \in H_1 \otimes H_2\} \).
+	\end{itemize}
+\end{thm}
+\begin{prf}
+	(a) It is easy to see that
+	\begin{equation*}
+		\varphi:E_1 \times E_2 \ni (x_1,x_2) \mapsto \left( K_1(\cdot ,x_1)K_2(\cdot ,x_2) \right)\in H
+	\end{equation*}
+	is a feature map of \( K \). Let \( H' \) be the RKHS generated by \( \varphi \) (and hence by \( K \)). Let \( H_0 \) be the subspace of \( H' \) spanned by \( \{K(\cdot ,x)\}_{x \in E_1 \times E_2} \).
+	Note that \( H_0 \subset H_1 \bullet H_2\) is dense in \( H' \), and that \( H' \) is isomorphic to the completion of \( H_0 \) and hence to that of \( H_1 \bullet H_2 \). It thus follows that \( H' \) and \( H_1 \otimes H_2 \) must coincide.
+	\qed\end{prf}
 
 \section{Inheritance from Kernel to RKHS}
 \subsection{Topological Properties of RKHS}
