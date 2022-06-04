@@ -44,6 +44,7 @@
 \newcommand{\norm}[1]{\left\| #1 \right\|}
 \newcommand{\ev}[1]{\mathrm{ev}_{#1}}
 \newcommand{\adj}[1]{#1^{\star}}
+\newcommand{\transpose}[1]{#1^{\top}}
 \newcommand{\fin}{\hfill \( \triangleleft \) }
 
 \let\Re\relax
@@ -67,8 +68,27 @@ This document collects basic results on reproducing kernel Hilbert space (RKHS) 
 \section*{Overview}
 
 \tableofcontents
-\clearpage
+
 \section*{Notation}
+List of frequently used notation.
+\begin{itemize}
+	\item \( \mathbb{N} \) : The set of natural numbers excluding zero.
+	\item \( \mathbb{R} \) : The set of real numbers.
+	\item \( \mathbb{F} \) : A scalar field, either \( \mathbb{R} \) or \( \mathbb{C} \).
+	\item \( E \) : A nonempty set on which typical functions are defined.
+	\item \( \overline{c} \) : The complex conjugate of a scalar \( c \).
+	\item \( \Re s \), \( \Im s \) : The real and imaginary part of a scalar \( s \).
+	\item \( \ip{\cdot }{\cdot }_{H} \) : The inner product in the inner product space \( H \).
+	\item \( \ker f \) : The kernel or null space of \( f \), i.e., the set of all points at which \( f \) is zero.
+	\item \( \ev{x} \) : The evaluation function at \( x \), i.e., the linear functional such that \( \ev{x}(f) = f(x) \).
+	\item \( \adj{H} \), \( \adj{f} \) : The dual space of \( H \) and the adjoint of \( f \).
+	\item \( S^{\perp } \) : The orthogonal complement of a subspace \( S \).
+	\item \( A \perp B\) : Every function in \( A \) is orthogonal to that in \( B \).
+	\item \( L^d(\Omega, \mathscr{B}, \mu) \) : The set of \( d \)-powered integrable functions on a measure space \( (\Omega, \mathscr{B}, \mu) \). (This is just a rough explanation. For detail, consult a book on measure theory.)
+\end{itemize}
+\clearpage
+\section{Introduction}
+kernel ridge regression as an natural extension of classical ridge regression.
 \section{Basic Property of RKHS}
 \subsection{Kernel and Positive Definite Function}
 \begin{dfn} (Kernel, Feature Space, Feature Map)
@@ -96,7 +116,7 @@ Let us start with an almost trivial remark about codomain of kernel.
 	It is easy to check that \( \ip{\cdot }{\cdot }_{H_0} \) is indeed an inner product. The proof about \( \varphi_0 \) is quite straightforward.
 	\qed\end{prf}
 
-In the following Proposition, we demonstrate an naive method to prove some elementary transformation of kernels is again a kernel.
+In the following proposition, we demonstrate a direct method to prove some elementary transformation of kernels is again a kernel.
 \begin{rem} (An review of tensor product of Hilbert spaces)
 	Let \( H_1 \) and \( H_2 \) be two \( \mathbb{F} \)-Hilbert spaces of functions on \( E_1 \) and \( E_2 \), respectively. Consider the vector space \( H_1 \bullet H_2 \) spanned by the all functions of the form
 	\begin{equation*}
@@ -124,21 +144,21 @@ In the following Proposition, we demonstrate an naive method to prove some eleme
 	which justifies our claim.
 	\qed\end{prf}
 
-This method is a bit tricky and sometimes even very hard to apply to more complicated situations. The difficulty comes from the heavy requirement that we have to specify an suitable feature space and a feature map, for instance, the tensor product space in the above Proposition. So, we now introduce the concept of positive definite function in order to explore the property of kernel in a more handy way.
+The direct method is a bit tricky and often turns out to be very hard to apply especially to more complicated situations. The difficulty comes from the requirement that we have to specify an suitable feature space and a feature map, for instance, the tensor product space in the above proposition. So, we now introduce the concept of positive definite function as a convenient tool for investigating the properties of kernel.
 \begin{dfn} (Positive definite function)
 	Let \( E \) be a nonempty set.
 	A function \( K: E \times E \to \mathbb{C} \) is called positive definite if for any \( n \in \mathbb{N} \) and for any \( a \in \mathbb{C}^n \) and \( x \in E^n \) there holds
 	\begin{equation}
 		\sum_{i=1}^{n} \sum_{j=1}^{n} a_i \overline{a_j}K(x_i,x_j) \ge 0, \label{pd eq}
 	\end{equation}
-	where \( \overline{c} \) is the complex conjugate of \( c \).
+	where \( \overline{a_j} \) is the complex conjugate of \( a_j \).
 \end{dfn}
 
 \begin{rem}
-	As we see later in section\ref{rkhs of a kernel}, the notion of positive definite function and that of kernel completely coincide. Consequently, all the results stated in the language of positive definite functions turn out to be true for kernels, and vice versa.
+	As we see later in section\ref{rkhs of a pd kernel }, the notion of positive definite function and that of kernel completely coincide. Consequently, all the results stated in the language of positive definite functions turn out to be true for kernels, and vice versa.
 	\fin\end{rem}
 
-We first want to establish that kernel is indeed positive definite. Before we do that, however, we should mention about the concept of positive definite \textit{real} functions.
+As a preparation, we should point out a minor note about positive definite \textit{real} functions. The proof is left to the reader.
 \begin{prp} (Characterization of real positive definite function)\label{chara real pd}
 	A real function \( K:E \times E \to \mathbb{R} \) is positive definite if and only if it has the following properties:
 	\begin{itemize}
@@ -147,7 +167,7 @@ We first want to establish that kernel is indeed positive definite. Before we do
 	\end{itemize}
 \end{prp}
 
-We now state the series of elementary properties of positive definite functions.
+We are now ready to state the series of basic properties of positive definite functions.
 \begin{prp}
 	Every positive definite function \( K:E \times E \to \mathbb{C} \) satisfies
 	\begin{itemize}
@@ -209,9 +229,9 @@ We now state the series of elementary properties of positive definite functions.
 % 	This clearly shows that, given a kernel, neither feature space nor feature map are uniquely determined.
 % 	\fin\end{rem}
 
-The following Propositions are easy to deduce.
+The following propositions are easy to deduce.
 \begin{prp}
-	Let \( K_n : E \times E \to \mathbb{F} \) be kernels.
+	Let \( K_n : E \times E \to \mathbb{F} \) be positive definite functions.
 	\begin{itemize}
 		\item[(a)] \( a K_1 + b K_2 \) is positive definite if \( a, b \ge 0 \).
 		\item[(b)] The function defined by the pointwise limit \( \lim_{n \to \infty} K_n(x,y) \) of \( K_n(x,y) \) is positive definite, provided that limit is well-defined.
@@ -231,8 +251,16 @@ The following Propositions are easy to deduce.
 	\end{itemize}
 \end{prp}
 
+\begin{ex} (Normalized kernel)
+	If \( K(x,x) >0 \) for all \( x \), then
+	\[
+		K_N(x,y) := \frac{K(x,y)}{\sqrt{K(x,x)K(y,y)}}
+	\]
+	is also a kernel with \( \abs{K_N} \le 1 \). \( K_N \) is called a \textit{normlized kernel}.
+	\fin\end{ex}
+
 \subsection{Properties of Reproducing Kernel}
-\begin{dfn}[Reproducing kernel]
+\begin{dfn}[Reproducing kernel hilbert space]
 	Let \( E \) be a nonempty set. A function \( K \) defined by
 	\[
 		K:E \times E \ni (x,y) \mapsto K(x,y) \in \mathbb{F}
@@ -249,6 +277,24 @@ The following Propositions are easy to deduce.
 	(b) is called the \textit{reproducing property}, and the identity is called the \textit{reproducing identity}.
 	\fin\end{rem}
 
+\begin{rem} (Reproducing kernel is a kernel)
+	Setting \( f = K(\cdot ,y) \) at (b) yields \( \ip{K(\cdot ,y)}{K(\cdot ,x)} = K(x,y)\). Therefore, every reproducing kernel is in fact a kernel, as the name suggests.
+	\fin\end{rem}
+
+\begin{ex} (Finite dimensional inner product space is a RKHS)
+	Suppose an inner product space \( (H, \ip{\cdot }{\cdot }) \) of functions on \( E \) is of finite dimensional. Since every finite dimensional normed vector space is complete, \( H \) is an Hilbert space. Given an orthonormal basis \( \left< u_1, \ldots, u_d \right> \) of \( H \),
+	\[
+		K(x,y) := \sum_{i=1}^{d} u_i(x)u_i(y)
+	\]
+	is a reproducing kernel of \( H \). In fact, for \( f = \sum_{i=1}^{d} a_i u_i(\cdot )  \), we have
+	\[
+		\ip{f}{K(\cdot ,x)}
+		= \sum_{i,j=1}^{d} a_ie_j(x) \ip{e_i(\cdot )}{e_j(\cdot )}
+		= \sum_{i=1}^{d} a_ie_i(x)
+		= f(x)
+	\]
+	for every \( x \in E \).
+	\fin\end{ex}
 
 \begin{thm}[Characterization of RKHS]\label{chara RKHS}
 	A Hilbert space \( H \) of functions on a nonempty set \( E \) admits a reproducing kernel \( K \) if and only if all evaluation functionals \( \{\ev{x} \} _{x \in E} \) are continuous on \( H \).
@@ -259,7 +305,7 @@ The following Propositions are easy to deduce.
 	\[
 		\abs{\ev{x}(f)} = \abs{f(x)} = \abs{ \ip{f}{K(\cdot , x)}} \le \norm{f} \norm{K(\cdot,x )} \le \norm{f} K(x,x) ^{1/2} \to 0
 	\]
-	as \(  \norm{f}\to 0 \). Thus, \( \ev{x} \) is continuous linear functional (with norm \( K(x,x) ^{1/2} \)).
+	as \(  \norm{f}\to 0 \). Thus, \( \ev{x} \) is a continuous linear functional (with norm \( K(x,x) ^{1/2} \)).
 
 	Conversely, if \( \ev{x}:H \ni f \mapsto f(x) \in \mathbb{F} \) is continuous, then, by Riesz's representation theorem, there exists \( r_x \in H\) such that
 	\begin{equation*}
@@ -333,7 +379,7 @@ The following Propositions are easy to deduce.
 	\qed\end{prf}
 
 
-\subsection{RKHS of a positive definite function} \label{rkhs of a pd kernel }
+\subsection{Construction of RKHS} \label{rkhs of a pd kernel }
 
 \begin{thm} (RKHS generated by inner product space)\label{RKHS generated by ip sp}
 	Let \( H_0 \) be the subspace of \( \mathbb{F}^E \), equipped with an inner product \( \ip{\cdot }{\cdot }_{H_0} \) with norm \( \norm{\cdot }_{H_0} \).
@@ -467,12 +513,12 @@ The following Propositions are easy to deduce.
 % 	when \( n,m \to \infty \), as required. \( H \) is isomorphic to the completion of \( H_0 \) since \( H_0 \) is dense in \( H \). Uniqueness of \( (H,K) \) comes from Proposition\ref{Density and Unique of RKHS}.
 % 	\qed\end{prf}
 
-\begin{rem}
-	Since \( H \) is derived as the completion of \( H_0 \), any Hilbert space that include \( H_0 \) and is isomorphic to \( H \) is identical to \( H \).
-	\fin\end{rem}
+% \begin{rem}
+% 	Since \( H \) is derived as the completion of \( H_0 \), any Hilbert space that include \( H_0 \) and is isomorphic to \( H \) is identical to \( H \).
+% 	\fin\end{rem}
 
 \begin{thm} (Moore-Aronszajn)\label{Moore Theorem}
-	For arbitrary positive definite function \( K:E \times E \to \mathbb{F} \), there exists unique RKHS \( H \) that has \( K \) as its reproducing kernel. Moreover, the subspace \( H_0 \) spanned by \( \{K(\cdot ,x)\}_{x \in E} \) is dense in \( H \).
+	For an arbitrary positive definite function \( K:E \times E \to \mathbb{F} \), there exists unique RKHS \( H \) that has \( K \) as its reproducing kernel. Moreover, the subspace \( H_0 \) spanned by \( \{K(\cdot ,x)\}_{x \in E} \) is dense in \( H \).
 \end{thm}
 \begin{prf}
 	Define an inner product \( \ip{\cdot}{\cdot }_{H_0} \) on \( H_0 \) by setting
@@ -539,7 +585,7 @@ The following Propositions are easy to deduce.
 	Theorem\ref{Characterization of pd} implies that RKHS \( (H,K) \) is a natural feature space.
 	\fin\end{rem}
 
-Theorem\ref{Characterization of pd} is a powerful tool to construct a positive definite function as well as to prove a given function is a kernel \textit{if we can find an appropriate feature space}, as the following example illustrates.
+Theorem\ref{Characterization of pd} is a powerful tool to construct a positive definite function as well as to prove a given function is a kernel \textit{if we can find an appropriate feature space}.
 \begin{ex}
 	Let us show that \( K(x,y) = \min(x,y),\,x,y \in \mathbb{R}_{+} \) is positive definite.
 	Let H:=\( L^2(\mathbb{R}_{+}, \mu) \) be the space of all square integrable functions on \( \mathbb{R}_{+} \) with respect to a \( \sigma \)-finite measure \( \mu \). It is well-known that \( H \) is a Hilbert space with the inner product \( \ip{f}{g}_H := \int_{\mathbb{R}_{+}} f \overline{g} d \mu\). Then we have
@@ -593,29 +639,29 @@ The next theorem construct a RKHS as a continuous embedding into a given feature
 	\fin\end{rem}
 
 
-\begin{cor}(RKHS derived by Fourier transformation)
-	Suppose that \( r \in L^1(\mathbb{R}, \mathscr{B}, dt) \) is a bounded continuous function with \( r(t) >0 \) for all \( t \), and write
-	\( H_0 := L^2(\mathbb{R}, \mathscr{B}, r(t)dt) \).
+\begin{cor}(RKHS derived by Fourier transformation)\label{rkhs by Fourier}
+	Suppose that \( r \in L^1(\mathbb{R}^d, \mathscr{B}, dt) \) is a bounded continuous function with \( r(t) >0 \) for all \( t \).
 	Then,
 	\[
-		H:= \{ \hat{wr} \mid w \in H_0\}
-		= \{ f \in L^2(\mathbb{R}, \mathscr{B}, dt) \mid \int_{\mathbb{R}} \frac{|\hat{f}|^2}{r}   dt < \infty \}
+		H:= \{ f \in L^2(\mathbb{R}^d, \mathscr{B}, dt) \mid \int_{\mathbb{R}^d} \frac{|\hat{f}|^2}{r}   dt < \infty \}
 	\]
 	is a RKHS with the inner product
 	\[
-		\ip{f}{g}_H := \int_{\mathbb{R}} \frac{\hat{f} \cdot \overline{\hat{g}}}{r} dt,
+		\ip{f}{g}_H := \int_{\mathbb{R}^d} \frac{\hat{f} \cdot \overline{\hat{g}}}{r} dt,
 	\]
 	where \( \hat{f} \) stands for the Fourier transformation of \( f \), and with the RK
 	\[
-		K: \mathbb{R} \times \mathbb{R} \ni (x,y) \mapsto \int_{\mathbb{R}} e^{-\sqrt{-1}(x-y)t} r(t) dt \in \mathbb{C}.
+		K: \mathbb{R}^d \times \mathbb{R}^d \ni (x,y) \mapsto \int_{\mathbb{R}^d} e^{-\sqrt{-1}(x-y)t} r(t) dt \in \mathbb{C}.
 	\]
 \end{cor}
 \begin{prf}
+	We prove for the case \( d = 1 \). The general case is proved similarly.
+	Let \( H_0 := L^2(\mathbb{R}, \mathscr{B}, r(t)dt) \). It is easy to deduce from Schwartz inequality that \( wr \in L^1(\mathbb{R}, dt) \) for every \( w \in H_0 \).
 	Let \( \varphi \) be a feature map that assigns, to each \( x \in \mathbb{R} \), the function \( \mathbb{R} \ni t \mapsto e^{- \sqrt{-1}xt} \in H_0 \). Theorem\ref{rkhs generated by feature map} tells us that \( H = \{\widehat{wr} \mid w \in H_0\} \) is a RKHS with the RK \( K \). We claim that the map
 	\[
 		V: H_0 \ni w \mapsto \ip{w}{\varphi(x)}_{H_0} \in H
 	\]
-	is injective. It is easy to deduce from Schwartz inequality that \( wr \in L^1(\mathbb{R}, dt) \) for every \( w \in H_0 \). Suppose \( \ip{w}{\varphi(x)}_{H_0} = 0 \), that is, suppose that Fourier transformation of \( wr \) is identically zero. This necessarily leads to \( wr = 0 \), and hence \(  w \equiv 0 \), as required.
+	is injective. Suppose \( \ip{w}{\varphi(x)}_{H_0} = 0 \), that is, suppose that Fourier transformation of \( wr \) is identically zero. This necessarily leads to \( wr = 0 \), and hence \(  w \equiv 0 \), as required.
 	It then follows that \( V:H_0 \to H \) is an isometrical isomorphism, and consequently that
 	\[
 		\ip{f}{g}_H
@@ -623,43 +669,140 @@ The next theorem construct a RKHS as a continuous embedding into a given feature
 		= \int \frac{\hat{f}}{r} \frac{\overline{\hat{g}}}{r} r dt
 		= \int \frac{\hat{f} \cdot \overline{\hat{g}}}{r} dt.
 	\]
-	In order to justify the alternative expression of \( H \), let us note that \( wr \in L^2(\mathbb{R}, dt)\cap L^1(\mathbb{R}, dt) \) for \( w \in H_0 \).
+	In order to justify the stated expression of \( H \), let us note that \( wr \in L^2(\mathbb{R}, dt)\cap L^1(\mathbb{R}, dt) \) for \( w \in H_0 \).
 	We may write \( f \in H \) as \( f = \widehat{wr} \) for some \( w \in H_0 \).
 	The well-known result from the theory of Fourier transformation then yields \( \hat{f} = wr \), which implies \( w \in H_0 \iff \hat{f}/r \in H_0 \).
 	\qed\end{prf}
 
 \subsection{Example of Kernels}
 
-\begin{ex} (Normalized kernel)
-
+\begin{ex}(Polynomial kernel)\label{ex polynomial kernel}
+	\[
+		K_P(x,y) : \mathbb{F}^d \times \mathbb{F}^d \ni (x,y) \mapsto  \left( \ip{x}{y} + c \right)^{m} \in \mathbb{F},
+	\]
+	\( c \ge 0 \) and \( m \in \mathbb{N} \) is a kernel. Its restriction to \( \mathbb{R}^d \) is called a real-valued \textit{polynomial kernel}.
 	\fin\end{ex}
 
-\begin{ex}(Polynomial kernel)
-	fuga
+\begin{ex} (Taylor type kernel) \label{ex taylor kernel}
+	Suppose that a function \( f \) defined on a subset \( D \) of \( \mathbb{F}^d \) admits a Taylor series expansion within an open subset \( B \) of \( D \):
+	\[
+		f(x) = \sum_{n=1}^{\infty} a_n x^{n},\quad x \in B.
+	\]
+	If \( a_n \ge 0 \) for all \( n \), then
+	\[
+		K_(x,y) : \mathbb{F}^d \times \mathbb{F}^d \ni (x,y)
+		\mapsto f(\ip{x}{y}) = \sum_{n=1}^{\infty} a_n \ip{x}{y}^n
+		\in \mathbb{F}
+	\]
+	defines a kernel called a \textit{kernel of Taylor type}. The restriction of \( K \) to \( B \cap \mathbb{R}^d \) is a real-valued kernel.
 	\fin\end{ex}
 
-\begin{ex} (Taylor type kernel)
-
-
+\begin{ex}(Exponential kernel) \label{ex exponential kernel}
+	\[
+		K_E : \mathbb{F}^d \times \mathbb{F}^d \ni (x,y)
+		\mapsto \exp \left( \beta \ip{x}{y} \right) \in \mathbb{F},
+	\]
+	\( \beta \ge 0 \) is a kernel called an \textit{exponential kernel}.
 	\fin\end{ex}
 
-\begin{ex}(Exponential kernel)
-
+\begin{ex}(Binomial kernel) \label{ex binomial kernel}
+	\[
+		K_B : \mathbb{F}^d \times \mathbb{F}^d \ni (x,y)
+		\mapsto \left( 1 - \ip{x}{y} \right)^{-\alpha} \in \mathbb{F},
+	\]
+	\( \alpha \ge 0 \), is a kernel called a \textit{binomial kernel}, defied on \( \{ x \in \mathbb{F}^d \mid \abs{\ip{x}{y}}< 1\} \),
+	since
+	\[
+		(1-t)^{-\alpha} = \sum_{n=1}^{\infty} \binom{-\alpha}{n}(-1)^{n}t^{n}
+	\]
+	for all \( \abs{t} < 1 \).
 	\fin\end{ex}
 
-\begin{ex}(Binomial kernel)
-
+\begin{ex} (Fourier type kernel) \label{ex Fourier kernel}
+	Suppose a function \( f \) on \( \mathbb{R} \) admits a pointwise Fourier series expansion within \( [-2 \pi, 2 \pi] \):
+	\[
+		f(x) = \sum_{n=1}^{\infty} a_n \cos (nx).
+	\]
+	If \( a_n \ge 0 \) for all \( n \), then
+	\[
+		K(x,y) : \mathbb{R}^d \times \mathbb{R}^d \ni (x,y)
+		\mapsto \prod_{i=1}^{d} f(x_i- y_i) \in \mathbb{R}
+	\]
+	defines a kernel on \( [0,2 \pi)^{d} \) called a kernel of Fourier type.
+	To see this, we may assume \( d= 1 \) without loss of generality. Since \( \{a_n\} \in \ell_1 \), each term on the expansion
+	\[
+		K(x,y) = a_0 + \sum_{n=1}^{\infty} a_n \cos (nx) \cos(ny) + \sum_{n=1}^{\infty} a_n \sin (nx) \sin (ny)
+	\]
+	is a kernel.
 	\fin\end{ex}
 
-\begin{ex} (Fourier type kernel)
+\subsection{Examples of RKHSs}
 
+
+\begin{ex} (RKHS generated by a finite dimensional kernel) \label{ex rkhs finite dim kernel}
+	Let \( K: E \times E \to \mathbb{F} \) be a kernel and suppose that the inner product space spanned by \( \{K(\cdot ,x)\}_{x \in E} \) is of finite dimensional. Then it is an Hilbert space; call it \( H \). Theorem\ref{Moore Theorem} says that \( H \) is also the RKHS with reproducing kernel \( K \).
+	A basis \( B:= \left< e_1, \ldots, e_d  \right> \) of \( H \), for instance, \( \left< K(\cdot ,x_1), \ldots ,K(\cdot ,x_d) \right> \) for some \( x_i \)'s,
+	defines a bijective linear mapping
+	\[
+		A : H \ni f = \sum_{i=1}^{d} a_i e_i \mapsto (a_i) \in \mathbb{F}^d
+	\]
+	The inner product of \( H \) is then given by
+	\[
+		\ip{f}{g}_H
+		= \sum_{i,j=1}^{d} a_i \overline{b_j}K(x_j,x_i)
+		= \transpose{(Af)}M_K \overline{Ag},
+	\]
+	where \( M_K:= K_{ij} := \left( K(x_i,x_j) \right) \) is a \( d \times d \) (Hermitian) symmetric matrix.
+
+	Now assume that \( M_K \) is positive definite in the matrix sense, that is, assume that every eigenvalue \( \lambda_i \) of \( M_K \) is positive.
+	Let \( \left< u_1, \ldots, u_d  \right> \) be an orthonormal basis derived by the spectral decomposition of \( M_K \), for which we have \( M_K = \sum_{i=1} \lambda_i u_i \transpose{\overline{u_i}} \).
+	As before, this basis defines a bijective linear mapping
+	\[
+		B : \mathbb{F}^{d} \ni a = \sum_{i=1}^{d} \alpha_i u_i \mapsto (\alpha_i) \in  \mathbb{F}^{d}.
+	\]
+	It then follows that
+	\[
+		\ip{f}{g}_H
+		= \sum_{i=1}^{d} \left( \transpose{a}u_i \right) \overline{u_i b}
+		= \sum_{i=1}^{d} \lambda_i \alpha_i \overline{\beta_i}
+		= \sum_{i=1}^{d} \lambda_i(BAf)_i \overline{(BAg)_i}.
+	\]
+	Thus, the mapping \( F(f) := BAf \) is an isomorphism between \( H \) and \( \mathbb{F}^d \) equipped with the inner product
+	\[
+		\ip{a}{b}_K := \transpose{a}M_K^{-1}\overline{b}
+		= \sum_{i=1}^{d} \frac{\alpha_i\overline{\beta_i}}{\lambda_i}.
+	\]
+	Moreover, \( \left( H, \ip{\cdot }{\cdot }_{K} \right) \) is a RKHS with RK \( M_K \). In fact, for \( a \in \mathbb{F}^d \) and \( k_i:= \overline{(K_{i1}, \ldots, K_{in})}^{\top} \), we have
+	\[
+		\ip{a}{k_i}_K = \transpose{a}M_K^{-1}\overline{k_i} = \transpose{a}M_K^{-1} (M_K)_i = a_i,
+	\]
+	as required.
 	\fin\end{ex}
 
-\begin{ex} (Gaussian RBF kernel)
-
+\begin{ex} (RKHS of polynomial a kernel)
+	Since the linear space spanned by a polynomial kernel of degree \( d \) (Example\ref{ex polynomial kernel}) is finite dimensional, Example\ref{ex rkhs finite dim kernel} tells us that the corresponding RKHS coincides with the space consisting of polynomials of degree at most \( d \).
 	\fin\end{ex}
 
-\begin{ex} (Laplacian kernel)
+\begin{ex} (RKHS of a Gaussian RBF kernel)
+	In Corollary\ref{rkhs by Fourier}, take \( r \in L^{1}(\mathbb{R}^d, dt) \) as
+	\[
+		r(t) :\mathbb{R} ^d \ni t \mapsto \frac{\sigma}{2 \pi} \exp \left( - \frac{\sigma^2}{2} \ip{t}{t} \right) \in \mathbb{R}.
+	\]
+	The resulting kernel is
+	\[
+		K(x,y) : \mathbb{R} ^d \ni t \mapsto \exp \left( -\frac{1}{2 \sigma^2} \norm{x-y}^2 \right) \in \mathbb{R},
+	\]
+	called \textit{Gaussian RBF kernel}. The associated RKHS is given by
+	\[
+		H = \{f \in L^2(\mathbb{R}^d, dt) \mid \int |\hat{f}(t)|^2 \exp \left( \frac{\sigma^2}{2} \ip{t}{t} \right) dt < \infty \}
+	\]
+	equipped with the inner product (equivalent to)
+	\[
+		\ip{f}{g} = \int \hat{f}(t)\cdot \hat{g}(t) \exp \left( \frac{\sigma^2}{2} \ip{t}{t} \right) dt
+	\]
+	\fin\end{ex}
+
+\begin{ex} (RKHS of a Laplacian kernel)
 
 	\fin\end{ex}
 
@@ -785,32 +928,6 @@ The next theorem construct a RKHS as a continuous embedding into a given feature
 	is a feature map of \( K \). Let \( H' \) be the RKHS generated by \( \varphi \) (and hence by \( K \)). Let \( H_0 \) be the subspace of \( H' \) spanned by \( \{K(\cdot ,x)\}_{x \in E_1 \times E_2} \).
 	Note that \( H_0 \subset H_1 \bullet H_2\) is dense in \( H' \), and that \( H' \) is isomorphic to the completion of \( H_0 \) and hence to that of \( H_1 \bullet H_2 \). It thus follows that \( H' \) and \( H_1 \otimes H_2 \) must coincide.
 	\qed\end{prf}
-
-\subsection{Examples of RKHSs}
-
-\begin{ex} (Finite dimensional RKHS)
-
-	\fin\end{ex}
-
-\begin{ex} (RKHS of a linear kernel)
-
-	\fin\end{ex}
-
-\begin{ex} (RKHS of functions on a finite set)
-
-	\fin\end{ex}
-
-\begin{ex} (RKHS of polynomial a kernel)
-
-	\fin\end{ex}
-
-\begin{ex} (RKHS of a Gaussian RBF kernel)
-
-	\fin\end{ex}
-
-\begin{ex} (RKHS of a Laplacian kernel)
-
-	\fin\end{ex}
 
 \section{Inheritance from Kernel to RKHS}
 \subsection{Topological Properties of RKHS}
