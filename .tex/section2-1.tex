@@ -1,0 +1,170 @@
+% \documentclass{report}
+\documentclass[a4paper,12pt]{article}
+\usepackage{mystyle}
+\usepackage{commands}
+\mathtoolsset{showonlyrefs=true}
+
+% remember that docmute package neglects all the preambles of the included .tex files. 
+\begin{document}
+% note that \chapter is not available for article
+\subsection{Kernel and Positive Definite Function}
+\begin{dfn} (Kernel, Feature Space, Feature Map)
+	A function \( K:E \times E \to \mathbb{F} \) is called a kernel if there is a \( \mathbb{F}\)-Hilbert space \( H \) and a mapping \( \varphi:E \to H \) such that
+	\begin{equation*}
+		K(x,y) = \ip{\varphi(y)}{\varphi(x)}_H
+	\end{equation*}
+	for all \( x,y \in E \).
+	Such a \( \varphi \) is called a feature map, and \( H \) a feature space.
+\end{dfn}
+
+\begin{ex}(Kernel admits many different feature spaces and feature maps)
+	Consider the function \( K:\mathbb{R} \times \mathbb{R} \ni (x,y) \mapsto xy \in \mathbb{R} \). Clearly, \( K \) is a kernel with a feature map \( E \ni x \mapsto x \in \mathbb{R} \) with a feature space \( \mathbb{R} \). On the other hand, the map \( E \ni x \mapsto (x / \sqrt{2}, x / \sqrt{2}) \in \mathbb{R}^2 \) is also a feature map of \( K \). An analogous argument works in order to device a new feature map of an arbitrary kernel. Therefore, neither feature space nor feature map are uniquely determined.
+	\fin\end{ex}
+
+Let us start with an almost trivial remark about codomain of kernel.
+\begin{prp} ( \( \mathbb{R} \)-valued \( \mathbb{C} \)-kernel admits a \( \mathbb{R} \)-feature space)\label{R-valued C-kernel admits a R-feature space}
+	Let \( K:E \times E \to \mathbb{C} \) be a kernel with a \( \mathbb{C} \)-feature space \( H \) and a feature map \( \varphi:E \to H \). Assume \( K(x,y)\in \mathbb{R} \) for all \( x,y \in E \). Then \( H_0 := H \) equipped with an inner product
+	\begin{equation*}
+		\ip{f}{g}_{H_0} := \Re \ip{f}{g}_{H_0}
+	\end{equation*}
+	is an \( \mathbb{R} \)-Hilbert space, and \( \varphi_0:E \to H_0 \) is a feature map of \( K \).
+\end{prp}
+\begin{prf}
+	It is easy to check that \( \ip{\cdot }{\cdot }_{H_0} \) is indeed an inner product. The proof about \( \varphi_0 \) is quite straightforward.
+	\qed\end{prf}
+
+In the following proposition, we demonstrate a direct method to prove some elementary transformation of kernels is again a kernel.
+\begin{rem} (An review of tensor product of Hilbert spaces)
+	Let \( H_1 \) and \( H_2 \) be two \( \mathbb{F} \)-Hilbert spaces of functions on \( E_1 \) and \( E_2 \), respectively. Consider the vector space \( H_1 \bullet H_2 \) spanned by the all functions of the form
+	\begin{equation*}
+		f_1 \otimes f_2: E_1 \times E_2 \ni (x_1,x_2) \mapsto f_1(x_1)f_2(x_2) \in \mathbb{F},
+	\end{equation*}
+	where \( f_1 \) and \( f_2 \) run through \( H_1 \) and \( H_2 \), respectively.
+	We can then introduce an inner product on \( H_1 \bullet H_2 \) by setting
+	\begin{equation*}
+		\ip{\cdot }{\cdot } : \left( H_1 \bullet H_2 \right) \times \left( H_1 \bullet H_2 \right) \ni (f_1 \otimes f_2, g_1 \otimes  g_2) \mapsto \ip{f_1}{g_1}_{H_1} \ip{f_2}{g_2}_{H_2}.
+	\end{equation*}
+	The smallest complete Hilbert space containing the inner product space \( H_1 \bullet H_2 \) is called the tensor product of \( H_1 \) and \( H_2 \), and is denoted by \( H_1 \otimes H_2 \).
+	\fin\end{rem}
+\begin{prp} (Product of kernels)
+	Let \( K_1 \) be a kernel on \( E_1 \) and \( K_2 \) be a kernel on \( E_2 \). Then \( K_1 \cdot K_2 \) is a kernel on \( E_1 \times E_2 \).
+\end{prp}
+\begin{prf}
+	Let \( \varphi_i : E_i \ni x \mapsto H_i \) be a feature map of \( K_i \). It follows from the definition of tensor product space \( H_1 \otimes H_2 \) that
+	\begin{equation*}
+		\begin{aligned}
+			K_1(x_1,y_1) \times K_2(x_2,y_2)
+			 & = \ip{\varphi_1(y_1)}{\varphi_1(x_1)}_{H_1} \ip{\varphi_2(y_2)}{\varphi_2(x_2)}_{H_2}                  \\
+			 & = \ip{\varphi_1(y_1) \otimes \varphi_2(y_2)}{\varphi_1(x_1) \otimes \varphi_2(x_2)}_{H_1 \otimes H_2},
+		\end{aligned}
+	\end{equation*}
+	which justifies our claim.
+	\qed\end{prf}
+
+The direct method is a bit tricky and often turns out to be very hard to apply especially to more complicated situations. The difficulty comes from the requirement that we have to specify an suitable feature space and a feature map, for instance, the tensor product space in the above proposition. So, we now introduce the concept of positive definite function as a convenient tool for investigating the properties of kernel.
+\begin{dfn} (Positive definite function)
+	Let \( E \) be a nonempty set.
+	A function \( K: E \times E \to \mathbb{C} \) is called positive definite if for any \( n \in \mathbb{N} \) and for any \( a \in \mathbb{C}^n \) and \( x \in E^n \) there holds
+	\begin{equation}
+		\sum_{i=1}^{n} \sum_{j=1}^{n} a_i \overline{a_j}K(x_i,x_j) \ge 0, \label{pd eq}
+	\end{equation}
+	where \( \overline{a_j} \) is the complex conjugate of \( a_j \).
+\end{dfn}
+
+\begin{rem}
+	As we see later in section\ref{rkhs of a pd kernel }, the notion of positive definite function and that of kernel completely coincide. Consequently, all the results stated in the language of positive definite functions turn out to be true for kernels, and vice versa.
+	\fin\end{rem}
+
+As a preparation, we should point out a minor note about positive definite \textit{real} functions. The proof is left to the reader.
+\begin{prp} (Characterization of real positive definite function)\label{chara real pd}
+	A real function \( K:E \times E \to \mathbb{R} \) is positive definite if and only if it has the following properties:
+	\begin{itemize}
+		\item[(a)] \( K \) is symmetric.
+		\item[(b)] The defining inequality (\ref{pd eq}) holds for any \( \alpha \in \mathbb{R}^n \) instead of \( \mathbb{C}^n \).
+	\end{itemize}
+\end{prp}
+
+We are now ready to state the series of basic properties of positive definite functions.
+\begin{prp}
+	Every positive definite function \( K:E \times E \to \mathbb{C} \) satisfies
+	\begin{itemize}
+		\item[(a)] \( K(x,x) \ge 0 \) for every \( x \in E \)
+		\item[(b)] \( K(x,y)=\overline{K(y,x)} \) for every \( x,y \in E \)
+		\item[(c)] \( \overline{K} \) is also positive definite, and conversely
+		\item[(d)] \( \abs{K(x,y)} \le K(x,x)K(y,y) \) for every \( x,y \in E \).
+	\end{itemize}
+\end{prp}
+\begin{prf}
+	(a) and (c) clearly hold. For \( \alpha, \beta \in \mathbb{C} \) and \( x,y \in E \), we have
+	\begin{equation*}
+		g(\alpha,\beta) := \abs{\alpha}^2 K(x,x) + \alpha \overline{\beta}K(x,y) + \overline{\alpha}\beta K(y,x) + \abs{\beta}^2 K(y,y) \ge 0.
+	\end{equation*}
+	Choose \( \alpha=\beta=1 \) and \( \alpha = i \), \( \beta=1 \) to get
+	\begin{equation*}
+		\begin{aligned}
+			K(x,y) + K(y,x) = g(1,1) - K(x,x) - K(y,y)     & =: A \in \mathbb{R}  \\
+			i K(x,y) - i K(y,x) = g(i,1) - K(x,x) - K(y,y) & =: B \in \mathbb{R}.
+		\end{aligned}
+	\end{equation*}
+	Therefore,
+	\begin{equation*}
+		\begin{aligned}
+			2 K(y,x) & = A + iB  \\
+			2 K(x,y) & = A - iB,
+		\end{aligned}
+	\end{equation*}
+	which proves (b). Finally, for \( x,y \in E \) with \( K(x,y) \neq 0 \) and for \( r \in \mathbb{R} \), (b) gives
+	\begin{equation*}
+		0 \ge g(r,K(x,y)) = r ^2 K(x,x) + 2r \abs{K(x,y)}^2 + \abs{K(x,y)}^2K(y,y).
+	\end{equation*}
+	As RHS is quadratic in \( r \), it must satisfy
+	\begin{equation*}
+		\abs{K(x,x)}^4 - \abs{K(x,y)}^2K(x,x)K(y,y) \le 0,
+	\end{equation*}
+	from which (d) follows.
+	\qed\end{prf}
+
+\begin{cor} (Kernel is positive definite)\label{kernel is pd}
+	A kernel is positive definite.
+\end{cor}
+\begin{prf}
+	For the case \( \mathbb{F}=\mathbb{C} \), we have
+	\begin{equation*}
+		\sum_{i=1}^{n} \sum_{j=1}^{n} a_i \overline{a_j} \overline{K(x_i,x_j)}
+		= \sum_{i=1}^{n} \sum_{j=1}^{n} a_i \overline{a_j} \ip{\varphi(x_i)}{\varphi(x_j)}
+		= \norm{\sum_{i=1}^{n} a_i \varphi(x_i) }^2 \ge 0,
+	\end{equation*}
+	and hence \( \overline{K} \) as well as \( K \) are positive definite.
+	\qed\end{prf}
+
+The following propositions are easy to deduce.
+\begin{prp}
+	Let \( K_n : E \times E \to \mathbb{F} \) be positive definite functions.
+	\begin{itemize}
+		\item[(a)] \( a K_1 + b K_2 \) is positive definite if \( a, b \ge 0 \).
+		\item[(b)] The function defined by the pointwise limit \( \lim_{n \to \infty} K_n(x,y) \) of \( K_n(x,y) \) is positive definite, provided that limit is well-defined.
+	\end{itemize}
+	In other words, the set of all positive definite functions is a closed cone.
+\end{prp}
+
+\begin{prp} \label{pd with map is pd}
+	Let \( K:E \times E \to \mathbb{F} \) be a positive definite function.
+	\begin{itemize}
+		\item[(a)] For an arbitrary map \( T:E_1 \to E \), the function
+		      \begin{equation*}
+			      K_T:E_1 \times E_1 \ni (x,y)  \mapsto K(T(x),T(y)) \in \mathbb{F}
+		      \end{equation*}
+		      is also positive definite. In particular, if \( E_1 \subset E \), the restriction of \( K \) to \( E_1 \times E_1 \) is positive definite.
+		\item[(b)] For an arbitrary map \( S:E \to \mathbb{F} \), the function \(E \times E \ni (x,y) \mapsto  S(x)K(x,y)\overline{S(y)} \) is also positive definite.
+	\end{itemize}
+\end{prp}
+
+\begin{ex} (Normalized kernel)
+	If \( K(x,x) >0 \) for all \( x \), then
+	\[
+		K_N(x,y) := \frac{K(x,y)}{\sqrt{K(x,x)K(y,y)}}
+	\]
+	is also a kernel with \( \abs{K_N} \le 1 \). \( K_N \) is called a \textit{normlized kernel}.
+	\fin\end{ex}
+
+\end{document}

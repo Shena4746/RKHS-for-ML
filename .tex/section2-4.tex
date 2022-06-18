@@ -1,0 +1,71 @@
+% \documentclass{report}
+\documentclass[a4paper,12pt]{article}
+\usepackage{mystyle}
+\usepackage{commands}
+\mathtoolsset{showonlyrefs=true}
+
+% remember that docmute package neglects all the preambles of the included .tex files. 
+\begin{document}
+% note that \chapter is not available for article
+\subsection{Example of Kernels}
+
+\begin{ex}(Polynomial kernel)\label{ex polynomial kernel}
+	\[
+		K_P(x,y) : \mathbb{F}^d \times \mathbb{F}^d \ni (x,y) \mapsto  \left( \ip{x}{y} + c \right)^{m} \in \mathbb{F},
+	\]
+	\( c \ge 0 \) and \( m \in \mathbb{N} \) is a kernel. Its restriction to \( \mathbb{R}^d \) is called a real-valued \textit{polynomial kernel (of degree \( m \))}.
+	\fin\end{ex}
+
+\begin{ex} (Taylor type kernel) \label{ex taylor kernel}
+	Suppose that a function \( f \) defined on a subset \( D \) of \( \mathbb{F}^d \) admits a Taylor series expansion within an open subset \( B \) of \( D \):
+	\[
+		f(x) = \sum_{n=1}^{\infty} a_n x^{n},\quad x \in B.
+	\]
+	If \( a_n \ge 0 \) for all \( n \), then
+	\[
+		K_(x,y) : \mathbb{F}^d \times \mathbb{F}^d \ni (x,y)
+		\mapsto f(\ip{x}{y}) = \sum_{n=1}^{\infty} a_n \ip{x}{y}^n
+		\in \mathbb{F}
+	\]
+	defines a kernel called a \textit{kernel of Taylor type}. The restriction of \( K \) to \( B \cap \mathbb{R}^d \) is a real-valued kernel.
+	\fin\end{ex}
+
+\begin{ex}(Exponential kernel) \label{ex exponential kernel}
+	\[
+		K_E : \mathbb{F}^d \times \mathbb{F}^d \ni (x,y)
+		\mapsto \exp \left( \beta \ip{x}{y} \right) \in \mathbb{F},
+	\]
+	\( \beta \ge 0 \) is a kernel called an \textit{exponential kernel}.
+	\fin\end{ex}
+
+\begin{ex}(Binomial kernel) \label{ex binomial kernel}
+	\[
+		K_B : \mathbb{F}^d \times \mathbb{F}^d \ni (x,y)
+		\mapsto \left( 1 - \ip{x}{y} \right)^{-\alpha} \in \mathbb{F},
+	\]
+	\( \alpha \ge 0 \), is a kernel called a \textit{binomial kernel}, defied on \( \{ x \in \mathbb{F}^d \mid \abs{\ip{x}{y}}< 1\} \),
+	since
+	\[
+		(1-t)^{-\alpha} = \sum_{n=1}^{\infty} \binom{-\alpha}{n}(-1)^{n}t^{n}
+	\]
+	for all \( \abs{t} < 1 \).
+	\fin\end{ex}
+
+\begin{ex} (Fourier type kernel) \label{ex Fourier kernel}
+	Suppose a function \( f \) on \( \mathbb{R} \) admits a pointwise Fourier series expansion within \( [-2 \pi, 2 \pi] \):
+	\[
+		f(x) = \sum_{n=1}^{\infty} a_n \cos (nx).
+	\]
+	If \( a_n \ge 0 \) for all \( n \), then
+	\[
+		K(x,y) : \mathbb{R}^d \times \mathbb{R}^d \ni (x,y)
+		\mapsto \prod_{i=1}^{d} f(x_i- y_i) \in \mathbb{R}
+	\]
+	defines a kernel on \( [0,2 \pi)^{d} \) called a kernel of Fourier type.
+	To see this, we may assume \( d= 1 \) without loss of generality. Since \( \{a_n\} \in \ell_1 \), each term on the expansion
+	\[
+		K(x,y) = a_0 + \sum_{n=1}^{\infty} a_n \cos (nx) \cos(ny) + \sum_{n=1}^{\infty} a_n \sin (nx) \sin (ny)
+	\]
+	is a kernel.
+	\fin\end{ex}
+\end{document}

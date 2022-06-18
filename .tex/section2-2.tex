@@ -1,0 +1,129 @@
+% \documentclass{report}
+\documentclass[a4paper,12pt]{article}
+\usepackage{mystyle}
+\usepackage{commands}
+\mathtoolsset{showonlyrefs=true}
+
+% remember that docmute package neglects all the preambles of the included .tex files. 
+\begin{document}
+% note that \chapter is not available for article
+\subsection{Properties of Reproducing Kernel}
+\begin{dfn}[Reproducing kernel hilbert space]
+	Let \( E \) be a nonempty set. A function \( K \) defined by
+	\[
+		K:E \times E \ni (x,y) \mapsto K(x,y) \in \mathbb{F}
+	\]
+	is called a reproducing kernel of a Hilbert space \( H \) of functions on \( E \) if it satisfies the following conditions:
+	\begin{itemize}
+		\item[(a)] \( K(\cdot, x) \in H \) for every \( x \in E \)
+		\item[(b)]  \( \ip{f}{K(\cdot, x)}_H = f(x) \) for every \( x \in E \) and every \( f \in H \).
+	\end{itemize}
+	Such a Hilbert space, associated with its reproducing kernel, is called a reproducing kernel hilbert space, and is denoted by \( (H,K) \).
+\end{dfn}
+
+\begin{rem}
+	(b) is called the \textit{reproducing property}, and the identity is called the \textit{reproducing identity}.
+	\fin\end{rem}
+
+\begin{rem} (Reproducing kernel is a kernel)
+	Setting \( f = K(\cdot ,y) \) at (b) yields \( \ip{K(\cdot ,y)}{K(\cdot ,x)} = K(x,y)\). Therefore, every reproducing kernel is in fact a kernel, as the name suggests.
+	\fin\end{rem}
+
+\begin{ex} (Finite dimensional inner product space is a RKHS)
+	Suppose an inner product space \( (H, \ip{\cdot }{\cdot }) \) of functions on \( E \) is of finite dimensional. Since every finite dimensional normed vector space is complete, \( H \) is an Hilbert space. Given an orthonormal basis \( \left< u_1, \ldots, u_d \right> \) of \( H \),
+	\[
+		K(x,y) := \sum_{i=1}^{d} u_i(x)u_i(y)
+	\]
+	is a reproducing kernel of \( H \). In fact, for \( f = \sum_{i=1}^{d} a_i u_i(\cdot )  \), we have
+	\[
+		\ip{f}{K(\cdot ,x)}
+		= \sum_{i,j=1}^{d} a_ie_j(x) \ip{e_i(\cdot )}{e_j(\cdot )}
+		= \sum_{i=1}^{d} a_ie_i(x)
+		= f(x)
+	\]
+	for every \( x \in E \).
+	\fin\end{ex}
+
+\begin{thm}[Characterization of RKHS]\label{chara RKHS}
+	A Hilbert space \( H \) of functions on a nonempty set \( E \) admits a reproducing kernel \( K \) if and only if all evaluation functionals \( \{\ev{x} \} _{x \in E} \) are continuous on \( H \).
+\end{thm}
+\begin{prf}
+	Suppose \( (H,K) \) is a RKHS.
+	For \( x \in E \) and for \( f \in H \) we have
+	\[
+		\abs{\ev{x}(f)} = \abs{f(x)} = \abs{ \ip{f}{K(\cdot , x)}} \le \norm{f} \norm{K(\cdot,x )} \le \norm{f} K(x,x) ^{1/2} \to 0
+	\]
+	as \(  \norm{f}\to 0 \). Thus, \( \ev{x} \) is a continuous linear functional (with norm \( K(x,x) ^{1/2} \)).
+	
+	Conversely, if \( \ev{x}:H \ni f \mapsto f(x) \in \mathbb{F} \) is continuous, then, by Riesz's representation theorem, there exists \( r_x \in H\) such that
+	\begin{equation*}
+		\ip{f}{r_x} = f(x)
+	\end{equation*}
+	for every \( f \in H \). If this happens for every \( x \in E \), then \( K(x,y):=r_x(y) \) is a reproducing kernel of \( H \).
+	\qed\end{prf}
+
+\begin{cor}\label{norm convergence implies pointwiese convergence}
+	Every convergent sequence in RKHS converges pointwise to the same limit.
+\end{cor}
+\begin{prf}
+	\( \abs{ f_n(x) - f(x)} = \abs{\ev{x}(f_n - f)} \to 0 \) when \( f_n \to f \) in norm by continuity of evaluation functional.
+	\qed\end{prf}
+
+The following proposition says that there is one-to-one correspondence between RKHS and reproducing kernel.
+\begin{prp}(Uniqueness of \( H \) and \( K \))\label{Density and Unique of RKHS}
+	
+	\begin{itemize}
+		\item[(a)] Let \( (H,K) \) be a RKHS. The subspace \( H_0 \) spanned by \( \{K(\cdot ,x) \} _{x \in E} \) is dense in \( H \).
+		\item[(b)] A Hilbert space admits at most one reproducing kernel.
+		\item[(c)] A function \( K:E \times E \to \mathbb{F} \) is a reproducing kernel for at most one Hilbert space. In particular, there is at most one RKHS that has \( H_0 \) as a dense subspace.
+	\end{itemize}
+\end{prp}
+\begin{prf}
+	For density of \( H_0 \), observe \( f \in H \) fulfills \( f \perp H_0 \) if and only if
+	\begin{equation*}
+		\ip{f}{K(\cdot ,x)}_H = f(x)=0
+	\end{equation*}
+	for every \( x \in E \), which is the case precisely when \( f \equiv 0 \).
+	To check (b), suppose \( K_1 \) and \( K_2 \) qualify as a reproducing kernel of \( H \). By definition,
+	\begin{equation*}
+		f(x) = \ip{f}{K_1(\cdot ,x)}_H =\ip{f}{K_2(\cdot ,x)}_H
+	\end{equation*}
+	for every \( x \in E \), and hence
+	\begin{equation*}
+		\ip{f}{K_1(\cdot ,x)- K_2(\cdot ,x)}_H = 0
+	\end{equation*}
+	for every \( f \in H \) and \( x \in E \). From this we conclude \( K_1 =K_2 \).
+	Finally suppose that \( (H_1,K) \) and \( (H_2,K) \) are two RKHSs.
+	Pick \( f \in H_1 \). By (a), there is \( \{f_n\} \subset H_0 \subset H_1 \cap H_2 \) such that \( f_n \to f \) in \( H_1 \)-norm. Since \( \{f_n\} \) is also an Cauchy sequence in \( H_2 \), it admits a limit \( g \in H_2 \). But Corollary\ref{norm convergence implies pointwiese convergence} implies \( f=g \), and hence \( f \in H_2 \). We then have
+	\begin{equation*}
+		\norm{f}_{H_1}
+		= \lim_{n \to \infty} \norm{f_n}_{H_1}
+		=\lim_{n \to \infty} \norm{f_n}_{H_0}
+		=\lim_{n \to \infty} \norm{f_n}_{H_2}
+		=\norm{f}_{H_2}.
+	\end{equation*}
+	Therefore, \( H_1 \) is isometrically included in \( H_2 \). Symmetry thus shows that both Hilbert spaces coincide.
+	\qed\end{prf}
+
+\begin{prp} (Representation of RK in terms of evaluation functional)\label{Representation of RK in terms of ev}
+	In an arbitrary RKHS \( (H,K) \), the reproducing kernel \( K:E \times E \to \mathbb{F} \) always fulfills the identity
+	\begin{equation*}
+		K(x,y) = \ip{\ev{y}}{\ev{x}}_{\adj{H}}
+	\end{equation*}
+	for all \( x,y \in E \), where \( \adj{H} \) is the dual space of \( H \).
+\end{prp}
+\begin{prf}
+	It suffices to show that a function \( K \) \textit{defined} by the above equation is also a reproducing kernel.
+	Let \( I:\adj{H}\to H \) be the isometric anti-linear surjection,  guaranteed by Riesz's Representation Theorem, that assigns to every functional in \( \adj{H} \) the corresponding representor in \( H \), i.e., \( \adj{g}(f)=\ip{f}{I \adj{g}}_H \) for all \( f \in H \) and \( g \in \adj{H} \), where \( \adj{g} \) is the adjoint of \( g \). Then we have
+	\begin{equation*}
+		K(x,y) = \ip{\ev{y}}{\ev{x}}_{\adj{H}}
+		= \ip{I \ev{y}}{I \ev{x}}_H
+		= \ev{x} \left( \ev{y} \right) = \left( I \ev{y} \right)(x),
+	\end{equation*}
+	for all \( x,y \in E \), and hence \( K(\cdot ,y) = I \ev{y} \in H \). From this it follows that
+	\begin{equation*}
+		f(y) = \ev{y}(f) = \ip{f}{I \ev{y}}_H = \ip{f}{K(\cdot ,y)}
+	\end{equation*}
+	for all \( y \in E \). Thus, \( K \) is a reproducing kernel.
+	\qed\end{prf}
+\end{document}

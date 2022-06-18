@@ -1,0 +1,46 @@
+% \documentclass{report}
+\documentclass[a4paper,12pt]{article}
+\usepackage{docmute}
+\usepackage{mystyle}
+\usepackage{commands}
+\mathtoolsset{showonlyrefs=true}
+
+\begin{document}
+%%% TITLE %%%
+\input{title}
+\thispagestyle{empty}
+\clearpage
+%%% FRONT %%% 
+\pagenumbering{roman}
+\tableofcontents
+\clearpage
+% \input{summary}
+\input{preface}
+\clearpage
+\input{notations}
+\clearpage
+%%% BODY %%% 
+\pagenumbering{arabic}
+\input{section1-Intro}
+\clearpage
+\input{section2}
+\input{section2-1}
+\input{section2-2}
+\input{section2-3}
+\input{section2-4}
+\input{section2-5}
+\clearpage
+\input{section3}
+\input{section3-1}
+\input{section3-2}
+\input{section3-3}
+\clearpage
+\input{section4}
+% \input{section4-1}
+% \input{section4-2}
+\clearpage
+\input{section5}
+%%% BACK %%% 
+\clearpage
+\input{back}
+\end{document}
