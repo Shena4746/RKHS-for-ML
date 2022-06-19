@@ -13,4 +13,4 @@
 /.history/
 # ignore all pdf except the master file named RKHS-for-ML.pfd
 *.pdf
-!/.pdf/RKHS-for-ML.pfd
+!/.pdf/RKHS-for-ML.pdf
